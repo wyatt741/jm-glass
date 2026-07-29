@@ -1,0 +1,40 @@
+{
+  "derived": "2026-07-29",
+  "business": "J&M Glass LLC, commercial glazing and tenant improvement, Phoenix AZ",
+  "knobs": {
+    "--accent": "#db1e22",
+    "--accent-deep": "#a41619",
+    "--accent-soft": "#e8595c",
+    "--accent-rgb": "219, 30, 34",
+    "--accent-soft-rgb": "232, 89, 92",
+    "--shadow-rgb": "24, 28, 33",
+    "--glow-a": "0",
+    "--motion": ".55",
+    "--r": "0px",
+    "--r-pill": "2px",
+    "--h-weight": "700",
+    "--h-track": "-0.015em",
+    "--h-track-hero": "-0.035em",
+    "--h-leading": "1.05",
+    "--font-display": "'Archivo Narrow', 'Arial Narrow', sans-serif",
+    "--font-body": "'Archivo', system-ui, sans-serif"
+  },
+  "reasoning": {
+    "--accent": "#db1e22 is not a choice, it is a recovered fact: their own Elementor global palette carries it, and the ampersand in their wordmark is printed in it. Half their current site runs Elementor stock colours alongside it, so adopting it exclusively is the single cheapest way to make the site read as theirs.",
+    "--accent-deep": "A 25 percent darkened #db1e22 for pressed and hovered states. Derived arithmetically from the brand red rather than picked, so the two never drift apart into a two-red palette.",
+    "--accent-soft": "The brand red lifted toward paper for the one place a red field needs to carry small dark text. Kept a genuine tint of #db1e22, never a second hue.",
+    "--accent-rgb": "The channel form of #db1e22, so every tint and rule derives from one declaration. Distance from black is 223, far outside the gate's neutrality floor.",
+    "--accent-soft-rgb": "Channel form of --accent-soft. Used for hairline tints where a solid red would shout on a document.",
+    "--shadow-rgb": "24, 28, 33 is a cool slate, not black. Aluminium and glass throw cool shadows, and their brand near-black #221e1f is faintly warm, which fought the material. Cool neutrals also set up the photography grade, where red is the only saturated element.",
+    "--glow-a": "0, and the KICKOFF asked this to be justified. Glass reflects, it does not emit. A halo would read as a lifestyle brand and would contradict every photograph on the site, which is flat Arizona daylight on matte aluminium. Nothing on this site glows.",
+    "--motion": ".55, brisker than the .6 the PLAYBOOK suggests for trades. The reader is a general contractor estimator deciding bid or no bid, and the research says the site has about ten seconds to survive that decision. Motion here is confirmation that a control was pressed, never decoration.",
+    "--r": "0px. A glazed opening is dead square. Panels, photo frames and table cells take the mullion's own geometry, which also stops the layout drifting toward the rounded-card look every competitor site uses.",
+    "--r-pill": "2px, and it is the only radius on the site. It marks pressable things: if it has a 2px machined edge you can press it, if it is square you cannot. That is a real rule a reader can learn in one screen, and it keeps the button family from ever becoming a pill.",
+    "--h-weight": "700. Their wordmark is heavy condensed black caps, so the headings inherit the logo's own weight rather than a generic display weight. It also holds up over photographs without a scrim.",
+    "--h-track": "-0.015em. Condensed grotesques open up at display size; a small negative tracking keeps headings reading as one object instead of spaced letters.",
+    "--h-track-hero": "-0.035em. Tighter still at hero scale, where the headline is set large enough that default tracking would fracture it.",
+    "--h-leading": "1.05. Tight enough to stack two display lines as a single block, loose enough to clear descenders in the condensed face. Deliberately not 1.0, which clipped the g and y.",
+    "--font-display": "DINPro is genuinely theirs, self-hosted in 22 @font-face rules, but it is a commercial Monotype family and is not redistributable on a rebuilt site. Archivo Narrow is the honest substitute: a squarish industrial grotesque at condensed width, which is what the wordmark already is. Arial Narrow is the offline fallback because it is the one condensed face present on every machine.",
+    "--font-body": "Archivo at normal width, the same superfamily as the display face. One superfamily at two widths reads as a type system rather than a pairing, which suits a document. Deliberately not Inter, the default that would make this look like every other rebuilt site."
+  }
+}

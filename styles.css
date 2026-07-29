@@ -18,28 +18,28 @@
 :root {
   color-scheme: light dark;
 
-  /* --- DIRECTION KNOBS: derive every value from the business brief (PLAYBOOK §9) ---
-     These start neutral on purpose. Neutral is not a style; it is the absence of one.
-     Never copy another site's values, and never ship the previous site's accent. */
-  --accent: #000000;
-  --accent-deep: #000000;
-  --accent-soft: #000000;
-  --accent-rgb: 0, 0, 0;
-  --accent-soft-rgb: 0, 0, 0;
-  --shadow-rgb: 0, 0, 0;
+  /* --- DIRECTION KNOBS: derived for J&M Glass 2026-07-29. Per-knob reasoning in
+     docs/direction.json, the read behind it in docs/DESIGN_READ.md. Commercial
+     glazing sold to GC estimators: the artefact is a bid document. */
+  --accent: #db1e22;
+  --accent-deep: #a41619;
+  --accent-soft: #e8595c;
+  --accent-rgb: 219, 30, 34;
+  --accent-soft-rgb: 232, 89, 92;
+  --shadow-rgb: 24, 28, 33;
 
-  --glow-a: 0;          /* emissive halo strength: 0=off, .4=soft, 1=neon */
-  --motion: 1;          /* tempo multiplier: .6=brisk, 1=default, 1.4=languid, 0=instant */
-  --ease: cubic-bezier(.2, 0, 0, 1);    /* interaction curve — the site's "hand" */
-  --spring: cubic-bezier(.2, 0, 0, 1);  /* overshoot curve; keep equal to --ease for none */
+  --glow-a: 0;          /* glass reflects, it does not emit. nothing here glows */
+  --motion: .55;        /* brisk: the reader is on a bid deadline */
+  --ease: cubic-bezier(.23, 1, .32, 1);    /* strong ease-out, entry and exit */
+  --spring: cubic-bezier(.23, 1, .32, 1);  /* flattened to --ease: aluminium does not overshoot */
 
-  --r: 0px;             /* panel corners */
-  --r-pill: 0px;        /* shape-signature corners: 0=hard, 4px=sharp, 100px=pill */
+  --r: 0px;             /* a glazed opening is dead square */
+  --r-pill: 2px;        /* the one shape rule: 2px machined edge means pressable */
 
-  --h-weight: 500;      /* heading personality */
-  --h-track: 0;
-  --h-track-hero: 0;
-  --h-leading: 1.2;
+  --h-weight: 700;      /* the wordmark is heavy condensed caps; headings agree */
+  --h-track: -0.015em;
+  --h-track-hero: -0.035em;
+  --h-leading: 1.05;
 
   /* typography voice — one of the two original beauty levers, previously the only
      ungated one. Derive BOTH per site (system-ui is the neutral, not a choice).
@@ -47,16 +47,18 @@
      var(--font-display), so deriving the pair changes the page with no extra rule —
      and a declared-but-never-rendered pair is impossible from this file. qa.py
      additionally proves the COMPUTED body/h1 fonts match direction.json. */
-  --font-display: system-ui, sans-serif;
-  --font-body: system-ui, sans-serif;
+  --font-display: 'Archivo Narrow', 'Arial Narrow', sans-serif;
+  --font-body: 'Archivo', system-ui, sans-serif;
 
-  /* surfaces — set these from the palette you derived, not from another site */
-  --ink: #111111;
-  --ink-soft: #444444;
-  --paper: #ffffff;
-  --surface: #ffffff;
-  --line: #dddddd;
-  --muted: #666666;
+  /* surfaces — cool neutrals, light default. Glass reflects rather than emits and
+     the artefact is a document read in daylight. Their brand near-black #221e1f is
+     faintly warm and fought the aluminium, so the whole neutral ramp is cooled. */
+  --ink: #16191d;
+  --ink-soft: #454b52;
+  --paper: #f5f6f7;
+  --surface: #fcfcfd;
+  --line: #d5d9dd;
+  --muted: #6b727a;
 
   /* Focus ring colour. Deliberately NOT --accent: a brand accent is frequently too
      low-contrast to be a focus indicator (a real case measured 2.42:1 on dark, well under
@@ -73,25 +75,29 @@
         chrome (scrollbars, form controls) matches
    Without block 1 an OS-dark visitor got dark scrollbars on a light page, because
    `color-scheme: light dark` promises the browser both while the tokens only delivered one. */
+/* NOTE for anyone editing: declare ONLY surface tokens in these two blocks. Both
+   selectors outrank bare :root, so a DIRECTION KNOB redeclared here would silently
+   become the winning value and gate.py would read it as drift against
+   docs/direction.json. Knobs live in :root, once. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ink: #f2f2f2;
-    --ink-soft: #c9c9c9;
-    --paper: #111111;
-    --surface: #1a1a1a;
-    --line: #333333;
-    --muted: #9a9a9a;
+    --ink: #eceef0;
+    --ink-soft: #b4bac1;
+    --paper: #101316;
+    --surface: #171b20;
+    --line: #2b3138;
+    --muted: #8b939b;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ink: #f2f2f2;
-  --ink-soft: #c9c9c9;
-  --paper: #111111;
-  --surface: #1a1a1a;
-  --line: #333333;
-  --muted: #9a9a9a;
+  --ink: #eceef0;
+  --ink-soft: #b4bac1;
+  --paper: #101316;
+  --surface: #171b20;
+  --line: #2b3138;
+  --muted: #8b939b;
 }
 
 :root[data-theme="light"] { color-scheme: light; }

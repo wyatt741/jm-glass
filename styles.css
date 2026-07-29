@@ -223,7 +223,7 @@ h1, h2, h3 { text-transform: none; }
 .tblock-in {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-areas: "mark light" "data data" "jump jump";
+  grid-template-areas: "mark acts" "data data" "jump jump";
   gap: 10px 24px;
   align-items: center;
   padding-block: 12px;
@@ -281,7 +281,6 @@ h1, h2, h3 { text-transform: none; }
 }
 
 .daylight {
-  grid-area: light;
   min-height: 44px;
   min-width: 60px;
   padding: 8px 12px;
@@ -305,12 +304,47 @@ h1, h2, h3 { text-transform: none; }
 @media (min-width: 900px) {
   .tblock-in {
     grid-template-columns: 172px 1fr auto auto;
-    grid-template-areas: "mark data jump light";
+    grid-template-areas: "mark data jump acts";
     gap: 0 28px;
     padding-block: 14px;
   }
   .tblock-data { font-size: 12.5px; }
   .jump-list { margin-left: 0; }
+}
+
+/* ---- the acts group: the two controls, in the title block ---- */
+.tblock-acts {
+  grid-area: acts;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.ask { position: relative; }
+.ask-open {
+  min-height: 44px;
+  padding: 9px 14px;
+  border: 1px solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background-color calc(.16s * var(--motion)) var(--ease),
+              border-color calc(.16s * var(--motion)) var(--ease),
+              transform calc(.1s * var(--motion)) var(--ease);
+}
+.ask-open:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) {
+  .ask-open:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+}
+.ask-open-txt--full { display: none; }
+@media (min-width: 1080px) {
+  .ask-open-txt--tight { display: none; }
+  .ask-open-txt--full { display: inline; }
 }
 
 /* ---- the opening: asymmetric, never centred ---- */
@@ -320,8 +354,8 @@ h1, h2, h3 { text-transform: none; }
 }
 .opening-claim {
   font-family: var(--font-display);
-  font-size: clamp(2.15rem, 6.4vw, 4.05rem);
-  max-width: 19ch;
+  font-size: clamp(1.95rem, 4.6vw, 3rem);
+  max-width: 28ch;
   margin-bottom: .5em;
 }
 .opening-sub {
@@ -718,30 +752,9 @@ h1, h2, h3 { text-transform: none; }
   .sf-in { grid-template-columns: 1.3fr 1fr 1fr; gap: 40px; }
 }
 
-/* ---- ask: the bid assistant. Opens from the sheet, not a floating bubble. ---- */
-.ask { position: relative; }
-.ask-open {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 30;
-  min-height: 48px;
-  padding: 13px 20px;
-  border: 1px solid var(--ink);
-  border-radius: var(--r-pill);
-  background: var(--ink);
-  color: var(--paper);
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  transition: background-color calc(.16s * var(--motion)) var(--ease),
-              transform calc(.1s * var(--motion)) var(--ease);
-}
-.ask-open:active { transform: scale(.97); }
-@media (hover: hover) and (pointer: fine) {
-  .ask-open:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-}
+/* ---- ask: the panel. Anchored under its trigger in the title block on desktop
+   (a popover scales from its trigger, emil-design-eng), a bottom sheet on phones
+   because that is where a thumb is, not because a bubble lives there. ---- */
 .ask-panel {
   position: fixed;
   z-index: 31;
@@ -881,8 +894,8 @@ h1, h2, h3 { text-transform: none; }
 
 .ask-hint {
   position: fixed;
-  right: 16px;
-  bottom: 74px;
+  top: calc(var(--tb-h, 88px) + 8px);
+  right: max(16px, calc((100vw - var(--measure)) / 2 + var(--gut)));
   z-index: 29;
   display: flex;
   align-items: stretch;
@@ -909,12 +922,14 @@ h1, h2, h3 { text-transform: none; }
 
 @media (min-width: 700px) {
   .ask-panel {
-    right: 16px;
-    bottom: 16px;
+    top: var(--tb-h, 88px);
+    right: max(16px, calc((100vw - var(--measure)) / 2 + var(--gut)));
+    bottom: auto;
     left: auto;
     width: 384px;
-    max-height: 620px;
+    max-height: min(620px, calc(100vh - var(--tb-h, 88px) - 24px));
     border: 2px solid var(--ink);
+    border-top-width: 0;
   }
 }
 /* freeze the sheet behind the panel on phones, or scrolling the assistant

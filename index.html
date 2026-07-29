@@ -40,15 +40,38 @@
     <nav class="jump" aria-label="Sheets">
       <ul class="jump-list"><li><a class="jump-a jump-a--here" href="index.html" aria-current="page">Home</a></li><li><a class="jump-a" href="scope.html">Scope</a></li><li><a class="jump-a" href="projects.html">Projects</a></li><li><a class="jump-a" href="contact.html">Bid invitations</a></li></ul>
     </nav>
-    <button class="daylight" type="button" data-theme-toggle aria-pressed="false">
-      <span class="daylight-txt" data-daylight-label>Dark</span>
-    </button>
+    <div class="tblock-acts">
+      <div class="ask" data-ask>
+  <button class="ask-open" type="button" data-ask-open aria-expanded="false"
+          aria-controls="ask-panel" aria-label="Ask about a bid">
+    <span class="ask-open-txt ask-open-txt--tight">Ask</span>
+    <span class="ask-open-txt ask-open-txt--full">Ask about a bid</span>
+  </button>
+  <div class="ask-panel" id="ask-panel" data-ask-panel hidden role="dialog"
+       aria-label="Bid assistant">
+    <div class="ask-head">
+      <p class="ask-title">Bid assistant</p>
+      <button class="ask-shut" type="button" data-ask-shut aria-label="Close the assistant">Close</button>
+    </div>
+    <div class="ask-log" data-ask-log role="log" aria-live="polite"></div>
+    <form class="ask-form" data-ask-form>
+      <label class="ask-lbl" for="ask-input">Message</label>
+      <input class="ask-input" id="ask-input" data-ask-input autocomplete="off"
+             placeholder="Ask about scope or a bid">
+      <button class="ask-send" type="submit" data-ask-send>Send</button>
+    </form>
+  </div>
+</div>
+      <button class="daylight" type="button" data-theme-toggle aria-pressed="false">
+        <span class="daylight-txt" data-daylight-label>Dark</span>
+      </button>
+    </div>
   </div>
 </header>
 <main id="main">
   <section class="opening">
     <div class="opening-copy">
-      <h1 class="opening-claim">Commercial glass and glazing for Arizona general contractors.</h1>
+      <h1 class="opening-claim">Commercial glazing for Arizona general contractors.</h1>
       <p class="opening-sub">Storefront, curtain wall, window wall and interior glass.
         Commercial only. Licensed in Arizona since 2015.</p>
       <p class="opening-acts">
@@ -102,24 +125,6 @@
     </div>
   </section>
 </main>
-<div class="ask" id="ask" data-ask>
-  <button class="ask-open" type="button" data-ask-open aria-expanded="false" aria-controls="ask-panel">
-    <span class="ask-open-txt">Ask about a bid</span>
-  </button>
-  <section class="ask-panel" id="ask-panel" data-ask-panel hidden aria-label="Bid assistant">
-    <div class="ask-head">
-      <p class="ask-title">Bid assistant</p>
-      <button class="ask-shut" type="button" data-ask-shut aria-label="Close the assistant">Close</button>
-    </div>
-    <div class="ask-log" data-ask-log role="log" aria-live="polite"></div>
-    <form class="ask-form" data-ask-form>
-      <label class="ask-lbl" for="ask-input">Message</label>
-      <input class="ask-input" id="ask-input" data-ask-input autocomplete="off"
-             placeholder="Ask about scope or a bid">
-      <button class="ask-send" type="submit" data-ask-send>Send</button>
-    </form>
-  </section>
-</div>
 <footer class="sheetfoot">
   <div class="sf-in">
     <div class="sf-data">

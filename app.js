@@ -79,6 +79,20 @@
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paint);
   }
 
+  /* ---- publish the title block's height so the assistant panel and its nudge can
+     hang off the trigger rather than off a screen corner. The masthead is three
+     rows on a phone and one on desktop, so this cannot be a constant. ---- */
+  const tblock = document.querySelector('.tblock');
+  if (tblock) {
+    const publish = () => {
+      document.documentElement.style.setProperty(
+        '--tb-h', Math.round(tblock.getBoundingClientRect().height) + 'px');
+    };
+    publish();
+    if ('ResizeObserver' in window) new ResizeObserver(publish).observe(tblock);
+    else addEventListener('resize', publish);
+  }
+
   /* ---- project filter. Hidden until JS runs, so no-JS shows every record. ---- */
   const bar = document.querySelector('[data-filterbar]');
   const recordHost = document.querySelector('[data-records]');

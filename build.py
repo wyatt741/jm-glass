@@ -181,7 +181,14 @@ def plate(photo, *, eager=False, caption=None, sizes="(min-width:900px) 46vw, 10
 
 def titleblock(here):
     """The masthead, built as a drawing-sheet title block: the mark, the checkable
-    licence line, and the sheet index. Deliberately not a floating pill nav."""
+    licence line, the sheet index, and the two controls.
+
+    The assistant's opener lives HERE, not floating bottom-right. A bottom-right
+    chat bubble is the single most recognisable piece of furniture from the older
+    sites and the KICKOFF names it explicitly, so the affordance sits where help
+    lives in a document: in the title block, labelled, beside the daylight
+    control. The panel is anchored under it (emil-design-eng: a popover scales
+    from its trigger)."""
     links = "".join(
         f'<li><a class="jump-a{" jump-a--here" if page == here else ""}" '
         f'href="{page}"{" aria-current=\"page\"" if page == here else ""}>{label}</a></li>'
@@ -200,9 +207,12 @@ def titleblock(here):
     <nav class="jump" aria-label="Sheets">
       <ul class="jump-list">{links}</ul>
     </nav>
-    <button class="daylight" type="button" data-theme-toggle aria-pressed="false">
-      <span class="daylight-txt" data-daylight-label>Dark</span>
-    </button>
+    <div class="tblock-acts">
+      {askwidget()}
+      <button class="daylight" type="button" data-theme-toggle aria-pressed="false">
+        <span class="daylight-txt" data-daylight-label>Dark</span>
+      </button>
+    </div>
   </div>
 </header>'''
 
@@ -240,13 +250,18 @@ def sheetfoot():
 def askwidget():
     """The chat affordance. The quote-wizard state machine and the XSS-safe
     linkifier are ported from the retired chat.js (git show 60db2db:chat.js) but
-    NONE of its markup is: no bottom-right bubble, no cw-* ids. This opens from the
-    title block, which is where help lives in a document."""
-    return '''<div class="ask" id="ask" data-ask>
-  <button class="ask-open" type="button" data-ask-open aria-expanded="false" aria-controls="ask-panel">
-    <span class="ask-open-txt">Ask about a bid</span>
+    NONE of its markup is: no bottom-right bubble, no cw-* ids.
+
+    The label is short on phones and full at desktop. Both spellings are real text
+    and the button carries an aria-label, so the accessible name never changes."""
+    return '''<div class="ask" data-ask>
+  <button class="ask-open" type="button" data-ask-open aria-expanded="false"
+          aria-controls="ask-panel" aria-label="Ask about a bid">
+    <span class="ask-open-txt ask-open-txt--tight">Ask</span>
+    <span class="ask-open-txt ask-open-txt--full">Ask about a bid</span>
   </button>
-  <section class="ask-panel" id="ask-panel" data-ask-panel hidden aria-label="Bid assistant">
+  <div class="ask-panel" id="ask-panel" data-ask-panel hidden role="dialog"
+       aria-label="Bid assistant">
     <div class="ask-head">
       <p class="ask-title">Bid assistant</p>
       <button class="ask-shut" type="button" data-ask-shut aria-label="Close the assistant">Close</button>
@@ -258,7 +273,7 @@ def askwidget():
              placeholder="Ask about scope or a bid">
       <button class="ask-send" type="submit" data-ask-send>Send</button>
     </form>
-  </section>
+  </div>
 </div>'''
 
 
@@ -292,7 +307,7 @@ def home():
 <main id="main">
   <section class="opening">
     <div class="opening-copy">
-      <h1 class="opening-claim">Commercial glass and glazing for Arizona general contractors.</h1>
+      <h1 class="opening-claim">Commercial glazing for Arizona general contractors.</h1>
       <p class="opening-sub">Storefront, curtain wall, window wall and interior glass.
         Commercial only. Licensed in Arizona since 2015.</p>
       <p class="opening-acts">
@@ -346,7 +361,6 @@ def home():
     </div>
   </section>
 </main>
-{askwidget()}
 {sheetfoot()}'''
     return SITE.page(
         f"{SITE.biz} | Commercial Glazing Phoenix",
@@ -381,7 +395,6 @@ def scope():
     <p><a class="act" href="contact.html">Send a bid invitation</a></p>
   </section>
 </main>
-{askwidget()}
 {sheetfoot()}'''
     return SITE.page(
         f"Scope of Work | {SITE.biz}",
@@ -437,7 +450,6 @@ def projects():
     <div class="glazing glazing--four">{caps}</div>
   </section>
 </main>
-{askwidget()}
 {sheetfoot()}'''
     return SITE.page(
         f"Project Record | {SITE.biz}",
@@ -516,7 +528,6 @@ def contact():
     </form>
   </section>
 </main>
-{askwidget()}
 {sheetfoot()}'''
     return SITE.page(
         f"Bid Invitations | {SITE.biz}",

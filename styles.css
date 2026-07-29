@@ -1,0 +1,156 @@
+/* BASE. Mechanics and accessibility only — this file contains no design.
+   Everything visible is authored per site below the marked line, from the brief (PLAYBOOK §9).
+
+   There is deliberately no nav, hero, card, button, footer or chat styling here. Those
+   components were what made every derived site recognisable as the same designer's work;
+   retokenising their colour never fixed that, so they are gone. Write your own.
+
+   What IS here, and why it is not taste:
+     - a reset, so you start from the same zero as any other project
+     - the DIRECTION KNOBS declaration: named tokens with neutral values, so a site
+       declares its character in one place instead of scattering it (test_knobs.py checks)
+     - the light/dark MECHANISM (a [data-theme] variable swap), not any theme's colours
+     - focus-visible, the skip link, and reduced-motion — accessibility, never optional
+*/
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  color-scheme: light dark;
+
+  /* --- DIRECTION KNOBS: derive every value from the business brief (PLAYBOOK §9) ---
+     These start neutral on purpose. Neutral is not a style; it is the absence of one.
+     Never copy another site's values, and never ship the previous site's accent. */
+  --accent: #000000;
+  --accent-deep: #000000;
+  --accent-soft: #000000;
+  --accent-rgb: 0, 0, 0;
+  --accent-soft-rgb: 0, 0, 0;
+  --shadow-rgb: 0, 0, 0;
+
+  --glow-a: 0;          /* emissive halo strength: 0=off, .4=soft, 1=neon */
+  --motion: 1;          /* tempo multiplier: .6=brisk, 1=default, 1.4=languid, 0=instant */
+  --ease: cubic-bezier(.2, 0, 0, 1);    /* interaction curve — the site's "hand" */
+  --spring: cubic-bezier(.2, 0, 0, 1);  /* overshoot curve; keep equal to --ease for none */
+
+  --r: 0px;             /* panel corners */
+  --r-pill: 0px;        /* shape-signature corners: 0=hard, 4px=sharp, 100px=pill */
+
+  --h-weight: 500;      /* heading personality */
+  --h-track: 0;
+  --h-track-hero: 0;
+  --h-leading: 1.2;
+
+  /* typography voice — one of the two original beauty levers, previously the only
+     ungated one. Derive BOTH per site (system-ui is the neutral, not a choice).
+     The base CONSUMES these: body renders var(--font-body) and headings render
+     var(--font-display), so deriving the pair changes the page with no extra rule —
+     and a declared-but-never-rendered pair is impossible from this file. qa.py
+     additionally proves the COMPUTED body/h1 fonts match direction.json. */
+  --font-display: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
+
+  /* surfaces — set these from the palette you derived, not from another site */
+  --ink: #111111;
+  --ink-soft: #444444;
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --line: #dddddd;
+  --muted: #666666;
+
+  /* Focus ring colour. Deliberately NOT --accent: a brand accent is frequently too
+     low-contrast to be a focus indicator (a real case measured 2.42:1 on dark, well under
+     the 3:1 non-text floor). Tracking --ink means it always contrasts with the page, and
+     outline-offset keeps the ring on the page rather than on a coloured control. Override
+     only after measuring. */
+  --focus: var(--ink);
+  /* --- end DIRECTION KNOBS --- */
+}
+
+/* Dark values live in TWO blocks on purpose and must stay in sync:
+     1. the OS default, for a visitor who has never chosen
+     2. an explicit [data-theme] choice, which also pins color-scheme so the browser's own
+        chrome (scrollbars, form controls) matches
+   Without block 1 an OS-dark visitor got dark scrollbars on a light page, because
+   `color-scheme: light dark` promises the browser both while the tokens only delivered one. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #f2f2f2;
+    --ink-soft: #c9c9c9;
+    --paper: #111111;
+    --surface: #1a1a1a;
+    --line: #333333;
+    --muted: #9a9a9a;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f2f2f2;
+  --ink-soft: #c9c9c9;
+  --paper: #111111;
+  --surface: #1a1a1a;
+  --line: #333333;
+  --muted: #9a9a9a;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);   /* the knob IS the stack — derive it, don't restyle here */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--h-weight);
+  letter-spacing: var(--h-track);
+  line-height: var(--h-leading);
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+a { color: inherit; }
+img, svg, video { max-width: 100%; height: auto; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* ---- accessibility: not design, not optional ---- */
+:focus-visible {
+  outline: 2.5px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.skip-link:focus { left: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ============================================================================
+   SITE STYLES — everything below is yours. Nothing above dictates a look.
+
+   Scale any timing you write through the knob, so the site has one tempo:
+       transition: transform calc(.3s * var(--motion)) var(--ease);
+   and any emissive halo through the glow knob, so a direction can switch it off:
+       box-shadow: 0 10px 30px -12px rgba(var(--accent-rgb), calc(.6 * var(--glow-a)));
+   test_knobs.py fails the build if you hardcode either.
+   ============================================================================ */

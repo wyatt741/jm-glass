@@ -1,0 +1,7 @@
+__pycache__/
+.DS_Store
+assets/src/
+.gate/
+docs/qa/*
+!docs/qa/side-by-side/
+.preflight-backup/

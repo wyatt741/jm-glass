@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(command -v python3 || command -v python || echo python3)\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.py\""
+          },
+          {
+            "type": "command",
+            "command": "py -3 \"%CLAUDE_PROJECT_DIR%/.claude/hooks/guard.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

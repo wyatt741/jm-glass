@@ -1,0 +1,30 @@
+{
+  // Cloudflare Worker config for the site chat proxy.
+  // The Anthropic key is NOT here - it's a secret: `wrangler secret put ANTHROPIC_API_KEY`
+  "name": "SITE-chat",                 // TODO: rename, e.g. "acme-chat"
+  "main": "worker.js",
+  "compatibility_date": "2026-07-24",
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+
+  // Per-IP rate limiting — ON by default. Native binding: no KV namespace to create and
+  // no per-request cost. worker.js gates on env.RL. It is an ABUSE CAP, not a quota:
+  // Cloudflare documents the limiter as permissive and eventually consistent (a short burst
+  // can exceed the limit before it engages, measured up to ~8 calls on one colo).
+  //   - period MUST be 10 or 60 (seconds) — the API supports only those two windows.
+  //   - namespace_id MUST be a STRING containing an integer ("1001", not 1001 — wrangler
+  //     rejects a bare number outright), and UNIQUE PER CLOUDFLARE ACCOUNT, not per worker.
+  //     Every site spun up from this template lands in the same account: CHANGE IT for each
+  //     new worker (anderson-chat="1001", jm-glass-chat="1002", next site takes "1003"...).
+  "ratelimits": [
+    { "name": "RL", "namespace_id": "CHANGE-ME-e.g-1003", "simple": { "limit": 20, "period": 60 } }
+  ]
+
+  // BRANDED CUSTOM DOMAIN (recommended once the site's DNS is on this Cloudflare account).
+  // Adding this route makes `wrangler deploy` auto-create the chat.<domain> DNS record + TLS
+  // cert AND disables the *.workers.dev URL - so set WORKER_URL in chat.js to the custom
+  // domain. Uncomment and fill in your domain:
+  //
+  // ,"routes": [
+  //   { "pattern": "chat.PLACEHOLDER-domain.com", "custom_domain": true }
+  // ]
+}

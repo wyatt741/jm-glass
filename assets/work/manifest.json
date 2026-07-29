@@ -1,0 +1,666 @@
+{
+ "projects": [
+  {
+   "slug": "arizona-credit-union",
+   "title": "Arizona Credit Union",
+   "city": "Surprise",
+   "types": [
+    "Commercial Shell",
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/credit-union-1.jpg",
+     "w": 540,
+     "h": 960,
+     "alt": "Dark aluminum-framed interior glass vestibule with blinds-between-glass partitions and glazed entrance door",
+     "q": "strong",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/credit-union-2.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Interior glass vestibule with blinds-between-glass panels beside an aluminum storefront window wall",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/credit-union-3.jpg",
+     "w": 540,
+     "h": 960,
+     "alt": "Frameless all-glass double doors with pivot hardware set in a dark interior wall opening",
+     "q": "strong",
+     "o": "portrait"
+    }
+   ]
+  },
+  {
+   "slug": "family-dollar",
+   "title": "Family Dollar",
+   "city": "El Mirage",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/family-dollar-1.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "White aluminum storefront framing with tinted glass and entrance door at a retail shell under construction",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/family-dollar-2.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Four-lite tinted storefront window in white aluminum frame beneath a red metal awning on a stucco elevation",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/family-dollar-3.jpg",
+     "w": 540,
+     "h": 960,
+     "alt": "Corner of white aluminum storefront glazing with entrance door and stone veneer wainscot",
+     "q": "strong",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/family-dollar-4.jpg",
+     "w": 540,
+     "h": 960,
+     "alt": "White aluminum storefront glazing next to an automatic sliding entrance door with transom",
+     "q": "strong",
+     "o": "portrait"
+    }
+   ]
+  },
+  {
+   "slug": "brusters-ice-cream",
+   "title": "Bruster's Ice Cream",
+   "city": "Gilbert",
+   "types": [
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/brusters-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Dark-anodized storefront framing with fixed and awning lites at a walk-up service window under construction",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/brusters-2.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Dark aluminum storefront window wall with stacked glass lites at a service counter opening",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "ktnn-radio-station",
+   "title": "KTNN Radio Station",
+   "city": "St Michaels",
+   "types": [
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/ktnn-1.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Frameless glass entry door and full-height glass partition walls in a finished commercial lobby",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/ktnn-2.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Frameless glass partition, door and large wall mirror in a broadcast studio lobby",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "storage-co",
+   "title": "Storage Co.",
+   "city": "Maricopa",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/storage-co-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Two-story reflective curtain wall corner tower and aluminum entry on a blue commercial building",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/storage-co-3.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Glazier on a lift setting reflective insulated glass into a two-story aluminum curtain wall",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "chop-shop",
+   "title": "Original ChopShop",
+   "city": "Tempe",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/chop-shop-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Black aluminum storefront with paired narrow-stile entrance doors and divided fixed lites at a restaurant",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/chop-shop-3.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Large black aluminum storefront window wall grid with entrance door in a cast stone restaurant facade",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/chop-shop-4.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Full-height black aluminum window wall with gridded clear glass lites on a restaurant patio elevation",
+     "q": "strong",
+     "o": "portrait"
+    }
+   ]
+  },
+  {
+   "slug": "scorpion-bay",
+   "title": "Scorpion Bay",
+   "city": "Peoria",
+   "types": [
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/lake-2.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Glass windbreak panels in galvanized posts along a floating marina dock beside open water",
+     "q": "ok",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/lake-3.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Completed glass windbreak panel run in steel posts along a marina dock patio",
+     "q": "ok",
+     "o": "portrait"
+    }
+   ]
+  },
+  {
+   "slug": "shopping-center-face-lift",
+   "title": "Shopping Center Face Lift",
+   "city": "Phoenix",
+   "types": [
+    "Commercial Shell",
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/shopping-center-1.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Dark bronze aluminum storefront framing with transoms and two entrance doors at a retail bay",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/shopping-center-2.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Bronze aluminum storefront and entrance door installed at a corner retail bay under renovation",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/shopping-center-3.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Retail storefront with aluminum framing, transom lites and center entrance door with pull handle",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/shopping-center-4.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Pair of aluminum entrance doors with ladder pulls in a recessed storefront entry",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/shopping-center-5.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Aluminum storefront window and entrance door set in a red stucco retail facade",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "medical-building",
+   "title": "Medical Building",
+   "city": "Florence",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/medical-1.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Single-story commercial building elevation with tinted aluminum storefront windows and center entrance doors",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/medical-2.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Angled view of a commercial building with a long run of tinted aluminum storefront windows and entry doors",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/medical-3.jpg",
+     "w": 960,
+     "h": 540,
+     "alt": "Aluminum storefront entrance with narrow-stile double doors, tinted sidelites and transoms under a red canopy",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "bath-body-works",
+   "title": "Bath & Body Works",
+   "city": "Tempe",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/bath-body-works-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Aluminum storefront glazing with center pair of entrance doors under a metal sunshade at a retail tenant space",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/bath-body-works-3.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Corner elevation of aluminum storefront framing and glass entrance doors at a retail tenant space",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "autozone",
+   "title": "Autozone",
+   "city": "Phoenix",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/autozone-1.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Glaziers on a ladder installing red aluminum storefront framing at a retail building under construction",
+     "q": "strong",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/autozone-2.jpg",
+     "w": 750,
+     "h": 1000,
+     "alt": "Long run of red aluminum storefront framing being installed across a retail building facade",
+     "q": "ok",
+     "o": "portrait"
+    }
+   ]
+  },
+  {
+   "slug": "st-thomas-building",
+   "title": "St. Thomas Building",
+   "city": "Avondale",
+   "types": [
+    "Commercial Shell",
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/st-thomas-building-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Corner aluminum storefront window wall and glazed door newly installed, glass taped with blue X marks",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/st-thomas-building-2.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Dark aluminum glazed interior door and full-height sidelite in a corridor under construction",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "canes",
+   "title": "Raising Cane's",
+   "city": "Phoenix",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/canes-1.jpg",
+     "w": 1000,
+     "h": 750,
+     "alt": "Dark aluminum window framing with tinted glass along a restaurant facade under construction",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "johnny-was",
+   "title": "Johnny Was",
+   "city": "Scottsdale",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/johnny-was.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Dark aluminum mall storefront with glass display lites and a pair of narrow-stile glass entrance doors",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "call-center",
+   "title": "Call Center",
+   "city": "Phoenix",
+   "types": [
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/call-center-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Frameless glass office partitions with sliding barn-track glass doors above new workstation millwork",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/call-center-2.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Glass-enclosed conference room with sliding glass doors on exposed track in an office under construction",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/call-center-3.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Corridor lined with frameless glass office fronts and sliding glass doors, taped during installation",
+     "q": "ok",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/call-center-4.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Installed run of frameless glass office partitions and sliding glass doors along an open office corridor",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "gym",
+   "title": "EOS Fitness",
+   "city": "Glendale",
+   "types": [
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/gym-1.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Aluminum entrance doors and full-height interior glass partition at a fitness studio entry",
+     "q": "ok",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/gym-2.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Interior aluminum-framed glass partition and door separating a gym floor from a corridor",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "pilot",
+   "title": "Flying J Travel Center",
+   "city": "Phoenix",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/pilot-3.jpg",
+     "w": 720,
+     "h": 960,
+     "alt": "Aluminum entrance doors with sidelites and a glazed window unit above a lit storefront entry",
+     "q": "strong",
+     "o": "portrait"
+    }
+   ]
+  },
+  {
+   "slug": "storefront",
+   "title": "Storefront",
+   "city": "",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/storefront-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Glazier on a ladder installing aluminum storefront framing on a new shell building",
+     "q": "ok",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/storefront-3.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Long run of aluminum storefront glazing installed along a new retail shell building",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "lobby",
+   "title": "Lobby",
+   "city": "Peoria",
+   "types": [
+    "Tenant Improvements"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/lobby-2.jpg",
+     "w": 640,
+     "h": 480,
+     "alt": "Faceted frameless glass partition wall above a stone reception counter in a finished lobby",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "esplanade",
+   "title": "Esplanade",
+   "city": "Phoenix",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/esplanade-1.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Frameless glass conference enclosure with full-height glass door in a high-rise office lobby",
+     "q": "strong",
+     "o": "landscape"
+    },
+    {
+     "src": "assets/work/esplanade-3.jpg",
+     "w": 960,
+     "h": 720,
+     "alt": "Full-height frameless glass wall and glass door enclosing a furnished corporate lobby with glass stair railing",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "aps-central-ave",
+   "title": "Taylor Morrison HQ",
+   "city": "Scottsdale",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/taylor-morrison-1-e1566006235349.jpg",
+     "w": 750,
+     "h": 1000,
+     "alt": "Office corridor lined with frameless glass office fronts and top-hung sliding glass doors during finish work",
+     "q": "ok",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/taylor-morrison-2.jpg",
+     "w": 1000,
+     "h": 750,
+     "alt": "Glass office fronts with sliding glass doors on stainless barn-door track in an open office under construction",
+     "q": "strong",
+     "o": "landscape"
+    }
+   ]
+  },
+  {
+   "slug": "hopdoddy-test",
+   "title": "Life Time Happy Valley-Peoria",
+   "city": "Peoria",
+   "types": [
+    "Commercial Shell"
+   ],
+   "photos": [
+    {
+     "src": "assets/work/lifetime-fitness-e1566012651569.jpg",
+     "w": 750,
+     "h": 1000,
+     "alt": "Multi-story building shell with tall rough openings and metal stud framing before glazing installation",
+     "q": "ok",
+     "o": "portrait"
+    },
+    {
+     "src": "assets/work/lifetime-fitness-happy-valley-01.jpg",
+     "w": 1000,
+     "h": 750,
+     "alt": "Three-story tilt-up concrete shell under construction with braced panels and empty window openings",
+     "q": "ok",
+     "o": "landscape"
+    }
+   ]
+  }
+ ],
+ "capability": [
+  {
+   "src": "assets/work/cfc-1.jpg",
+   "w": 750,
+   "h": 1000,
+   "alt": "Multi-story blue-tinted curtain wall and ground-floor storefront glazing installed on a commercial building",
+   "q": "strong",
+   "o": "portrait"
+  },
+  {
+   "src": "assets/work/cfc-2.jpg",
+   "w": 750,
+   "h": 1000,
+   "alt": "Two-story aluminum curtain wall framing grid installed and awaiting glass on a commercial building",
+   "q": "ok",
+   "o": "portrait"
+  },
+  {
+   "src": "assets/work/cfc-4.jpg",
+   "w": 1000,
+   "h": 750,
+   "alt": "Blue reflective insulated glass units glazed into lower curtain wall bays with upper framing still open",
+   "q": "strong",
+   "o": "landscape"
+  },
+  {
+   "src": "assets/work/cfc-5.jpg",
+   "w": 750,
+   "h": 1000,
+   "alt": "Completed bay of reflective curtain wall glazing with crated glass units staged on the ground below",
+   "q": "strong",
+   "o": "portrait"
+  }
+ ],
+ "team": {
+  "src": "assets/work/team-2023.jpg",
+  "w": 750,
+  "h": 1000
+ }
+}

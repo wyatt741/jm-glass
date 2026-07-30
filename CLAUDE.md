@@ -79,20 +79,35 @@ python3 gate.py            # build + 5 tests + stylesheet + direction
 Then read [docs/BUILD_LOG.md](docs/BUILD_LOG.md), which carries every red-to-green cycle and
 the pending §12.8 row.
 
-**To ship** (only after Wyatt writes the verdict):
+### Step 1, the client PREVIEW (where this repo stands now)
+
+Configured and stamped for `https://wyatt741.github.io/jm-glass/`: honest canonicals on the
+subpath, every page `noindex,nofollow`, `robots.txt` `Disallow: /`, and no CNAME. `ship.py`
+refuses on exactly one thing, the verdict.
 
 1. Replace `PENDING` with `ACCEPT` on the `§12.8` row in `docs/BUILD_LOG.md`.
-2. `printf 'jmglassllc.com\n' > CNAME` — **only at DNS cutover.** `ship.py` requires the
-   CNAME to already match the settled domain, and KICKOFF forbids creating it earlier
-   because GitHub would 301 the working preview URL to a domain it does not serve. See the
-   hosting note in `docs/SETTLED.md`.
-3. `python3 gate.py --ship` then `python3 ship.py`. **Never** `git push`, `gh repo create`
-   or `wrangler deploy` by hand; a pre-push hook enforces the stamp.
-4. `python3 "$HOME/Documents/Claude/Website Template/registry.py" add .`
+2. `python3 gate.py --ship && python3 ship.py`
+
+**Never** `git push`, `gh repo create` or `wrangler deploy` by hand; a pre-push hook enforces
+the stamp.
+
+### Step 2, the LIVE cutover, all in ONE motion
+
+Standing rule (RUN.md phase 7): shipping and moving DNS happen together, because either order
+alone leaves no working URL.
+
+1. `docs/SETTLED.md`: `- domain: jmglassllc.com`, delete the `- preview:` line.
+2. `build.py`: `domain="jmglassllc.com"`, `preview=False` (the switch is commented at the top).
+3. `printf 'jmglassllc.com\n' > CNAME`
+4. Point jmglassllc.com's DNS at GitHub Pages, or at Cloudflare if you want the hybrid Worker
+   on `chat.jmglassllc.com`.
+5. `python3 gate.py --ship && python3 ship.py`
+6. `python3 "$HOME/Documents/Claude/Website Template/registry.py" add .`
 
 ## Open items Wyatt owes
 
 - The `§12.8` verdict.
-- Whether to cut over DNS (the chatbot Worker at `chat.jmglassllc.com` needs it too).
+- The DNS cutover, whenever J&M approve the preview (the Worker at `chat.jmglassllc.com`
+  needs it too).
 - The FormSubmit one-time activation click, on the first real submission.
 - An Anthropic key + spend cap for the hybrid Worker before it answers anything.

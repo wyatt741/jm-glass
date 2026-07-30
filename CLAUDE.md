@@ -1,29 +1,26 @@
 # jm-glass — Project Entry
 
-> ⭐ **LATEST SESSION — 2026-07-29.** Built end to end with the **site-v2 runner** (the
-> template's first real client site). Phases 0-6 complete, 19 commits, **nothing pushed, 0
-> remotes.** Configured and stamped for a **client PREVIEW** at
-> `https://wyatt741.github.io/jm-glass/` (noindex, no CNAME, not their domain) because J&M
-> have not seen it and their DNS has not moved. `ship.py` refuses on **exactly one** thing:
-> the `§12.8` row in [docs/BUILD_LOG.md](docs/BUILD_LOG.md) says `PENDING` and needs Wyatt's
-> `ACCEPT`.
+> ⭐ **LATEST SESSION — 2026-07-29/30.** **SHIPPED as a client preview:**
+> **https://wyatt741.github.io/jm-glass/** — noindex, `robots.txt Disallow: /`, no CNAME, not
+> their domain. Repo `wyatt741/jm-glass` is public (Pages requires it). Verified live: all 4
+> pages 200, and `docs/research/`, `docs/RESEARCH_BRIEF.md`, `build.py`, `tools/` and
+> `assets/src/` all **404** on the real origin, so the `_config.yml` exclusion holds.
 >
-> **The bar was near-zero class-name overlap with the older sites. Result: 0 against all five
-> registry entries** on 128 authored classes, confirmed by `test_unique.py` and by KICKOFF's
-> own `comm -12`. The attempt this replaces shared 41.
+> Built end to end with the **site-v2 runner** (the template's first real client site).
+> **Class overlap 0 against all five prior registry sites** on 128 authored classes; the
+> attempt this replaces shared 41. jm-glass is now itself in the registry (131 classes).
 >
 > **An Impeccable audit plus two adversarial rounds found 33 real defects; all fixed.** Four
 > were regressions from my own fixes and two were bugs in my QA harness, so treat a green
 > harness with suspicion. Final: `gate.py --ship` green, detector clean 3x, `visual_qa.py`
 > 70/70.
 >
-> **The research is NOT in this repo.** `docs/RESEARCH_BRIEF.md` and `docs/research/` were
-> purged from all history before the first push (Pages needs a public repo and the client gets
-> that URL). They are gitignored on disk and backed up at `../jm-glass-research-private/`.
+> **The §12.8 verdict is still open and now gates the LIVE ship only** (rule changed this
+> session: a preview is how a human gets to look at the site in order to judge it). The
+> Worker deploy defers with it.
 >
-> **Five engine changes went upstream** to `~/Documents/Claude/Website Template`: the
-> ship-and-cut-DNS-together rule, a JS-copy content gate, `_config.yml` Pages exclusion, and
-> base-path preview mode. Full detail:
+> **The research is NOT in this repo** — purged from history before the first push, gitignored
+> on disk, backed up at `../jm-glass-research-private/`. Full detail:
 > [docs/SESSION_STATE_2026-07-29.md](docs/SESSION_STATE_2026-07-29.md).
 
 ## What this is
@@ -86,17 +83,16 @@ python3 gate.py            # build + 5 tests + stylesheet + direction
 Then read [docs/BUILD_LOG.md](docs/BUILD_LOG.md), which carries every red-to-green cycle and
 the pending §12.8 row.
 
-### Step 1, the client PREVIEW (where this repo stands now)
+### Step 1, the client PREVIEW — DONE
 
-Configured and stamped for `https://wyatt741.github.io/jm-glass/`: honest canonicals on the
-subpath, every page `noindex,nofollow`, `robots.txt` `Disallow: /`, and no CNAME. `ship.py`
-refuses on exactly one thing, the verdict.
+Live at **https://wyatt741.github.io/jm-glass/**. To publish any further change:
 
-1. Replace `PENDING` with `ACCEPT` on the `§12.8` row in `docs/BUILD_LOG.md`.
-2. `python3 gate.py --ship && python3 ship.py`
+```bash
+python3 gate.py --ship && python3 ship.py
+```
 
-**Never** `git push`, `gh repo create` or `wrangler deploy` by hand; a pre-push hook enforces
-the stamp.
+**Never** `git push`, `gh repo create` or `wrangler deploy` by hand; the pre-push hook enforces
+the stamp and will block you (it did, once, this session).
 
 ### Step 2, the LIVE cutover, all in ONE motion
 

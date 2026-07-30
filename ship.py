@@ -99,8 +99,14 @@ SHIP_SET_FILES = {
     "test_seo.py", "test_knobs.py", "test_content.py", "test_unique.py",
     # the rest of what preflight --start lands in every site repo:
     ".mcp.json", "setup-design-tools.sh",
+    # the docs the RUNNER itself mandates. RUN.md phase 7 requires this repo's own
+    # CLAUDE.md, and §4 requires LICENSES.md, so refusing to stage them made the
+    # ship refuse the very artifacts it asked for (caught on the jm-glass ship).
+    "CLAUDE.md", "LICENSES.md", "KICKOFF.md",
 }
-SHIP_SET_DIRS = ("worker/", "assets/", "docs/", ".claude/")
+# tools/ holds the per-site asset and QA scripts a future session needs to rebuild
+# anything; _config.yml keeps them off the served origin.
+SHIP_SET_DIRS = ("worker/", "assets/", "docs/", ".claude/", "tools/")
 SIDE_BY_SIDE = ROOT / "docs" / "qa" / "side-by-side"
 
 HOOK_MARKER = "ship.py pre-push guard"

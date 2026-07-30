@@ -13,3 +13,6 @@ docs/RESEARCH_BRIEF.md
 
 # browser MCP debug output, swept in once by a git add -A
 .playwright-mcp/
+
+# local CLAUDE.md snapshots from save-state; git history is the real backup
+Backups/

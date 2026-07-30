@@ -453,6 +453,11 @@
   /* ---- one nudge per session. IntersectionObserver, never a scroll listener. ---- */
   function nudge() {
     if (started || !panel.hidden) return;
+    // Not on phones. Anchored under the title block it lands on top of the h1,
+    // and the opener is already a thumb's reach away in the masthead. Moving it
+    // to the bottom instead would just rebuild the floating bubble this design
+    // deliberately does not have.
+    if (!matchMedia('(min-width: 700px)').matches) return;
     try {
       if (sessionStorage.getItem('ask-nudged')) return;
       sessionStorage.setItem('ask-nudged', '1');

@@ -72,6 +72,17 @@ overlap jr-smoke-zone: 0
 this rebuild replaces shared **41** with v1 after a full per-business derivation. No waiver
 was needed, so `docs/WAIVERS.md` does not exist: none of the 20 banned names is in use.
 
+KICKOFF's own `comm -12` command, run against the generated HTML, agrees:
+
+```
+$ comm -12 <(grep -ho 'class="[^"]*"' *.html | tr ' "' '\n\n' | sed 's/class=//' | sort -u) \
+           <(grep -ho 'class="[^"]*"' ../bwraps/*.html | tr ' "' '\n\n' | sed 's/class=//' | sort -u)
+(no output)
+```
+
+**0 shared class names with bwraps, 0 with anderson-it, out of 117 distinct class names in
+the markup.**
+
 The KICKOFF's named reflexes, each checked: no floating pill nav, no bottom-right chat
 bubble (defect 4 above, caught and fixed), no logo marquee, no three-across feature cards,
 no dark CTA band before the footer, no eyebrow-pill section heads, no `.wrap`/`.section`
@@ -79,4 +90,73 @@ rhythm. Eyebrow count across the site: zero.
 
 ## Phase 6, QA and the §12.8 verdict
 
-_Filled in below as the QA pass runs._
+### Automated QA
+
+`gate.py --ship` green, stamp written over 247 files. `qa.py`: 4 pages x 2 widths x
+2 themes, zero horizontal overflow anywhere, `#main` present everywhere, all 16 knobs
+verified by **computed style on a loaded page**, and both fonts proven to RENDER
+(`body` computes `archivo`, `h1` computes `archivo narrow`) rather than merely being
+declared.
+
+`qa.py` does not cover §12.6 tap targets, §12.6 contrast or §12.7 keyboard focus, and it
+screenshots `full_page` on a page it never scrolls, so lazy images below the fold came out
+blank. `tools/visual_qa.py` closes both gaps: **70 assertions, 0 failures.**
+
+| Check | Result |
+|---|---|
+| Tap targets >= 44px, both dimensions | green after 8 fixes (see below) |
+| Text contrast, WCAG AA (4.5:1, 3:1 large) | green on all 16 combos, first pass |
+| Focus ring on every control | green on all 16 combos, first pass |
+| Daylight control toggles the theme | green |
+| Assistant opens from the title block and greets | green |
+| Assistant closes on Escape, focus returns to the opener | green |
+| Quote wizard advances and offers its options | green |
+| Project filter narrows the record | green, 22 to 9 |
+| All images decode | green after the keep-alive fix |
+
+Fixes this pass forced:
+
+| # | Failure | Cause and fix |
+|---|---|---|
+| 5 | 8 tap targets under 44px: the logo link, the title-block phone, 3 footer contact links, footer nav links, the nudge dismiss, 3 contact data links | Real. The hit area now reaches 44px via `inline-flex` + `min-height`/`min-width`, so the 12px data strip keeps its density while the control is thumb-sized |
+| 6 | 6 GC logos reported as failed to load | **My QA harness, not the site.** I set `protocol_version` on a `functools.partial` instead of on the handler class, so the server silently stayed HTTP/1.0, closed every connection, and a sheet requesting 60 images at once got resets that look exactly like broken images. This is PLAYBOOK §10's documented trap and it bit the tool built to catch it |
+| 7 | The pass hung 12 minutes on the project sheet | `html` has `scroll-behavior: smooth`, so `scrollTo(bottom)` **animates**. On a 15000px sheet it never traversed the middle, those lazy images never started loading, and awaiting their `load` event waited forever. Now: disable smooth for the settle, step through in viewport increments, force `loading="eager"`, and race the wait against a timeout |
+| 8 | Contrast walk was very slow | `getComputedStyle` up the ancestor chain for every text node, over 54 identical captions. Deduped by style signature |
+| 9 | Hero headline 4 lines, then 3 | Measured across 5 widths rather than guessed. Now 2 lines at 1440, 1280, 1100 and 430; 3 at exactly 900px, where the two-column split first engages and the CTA still sits at 468px |
+| 10 | "Reach us directly" collided with the list above it | `.bid-h + .bid-h` could not match across the intervening `<ul>`. Added `.bid-list + .bid-h` |
+| 11 | The nudge landed on top of the h1 at 430px | Suppressed below 700px. The opener is already a thumb's reach away in the masthead, and moving the nudge to the bottom would just rebuild the floating bubble this design deliberately does not have |
+
+### The side-by-side
+
+`docs/qa/side-by-side/jm-glass-vs-anderson-it-vs-andersontech-site.png`, four panels at
+1440 wide, matched viewport height. The two nearest registry sites are **anderson-it** and
+**andersontech-site** (all five overlaps are 0, so the tie broke on registry order, first
+listed wins). **bwraps** is included as a fourth panel because KICKOFF names it explicitly.
+anderson-it came from its live URL with one overlay dismissed before the shot; the other two
+have no live URL in the registry and were served from their own repos.
+
+Per-axis reading:
+
+| Axis | J&M Glass | anderson-it | andersontech-site | bwraps |
+|---|---|---|---|---|
+| **Nav** | flush full-width title block, licence data strip, underline-active links, no CTA pill | dark bar, pill CTA | dark bar, pill CTA | dark bar, pink pill CTA |
+| **Section rhythm** | hairline-ruled document sections and data tables | dark full-bleed bands, card rows | dark bands, centred statements | dark bands, big media |
+| **Type** | Archivo Narrow condensed, tight, left-aligned, small | wide grotesque, large, centred | wide grotesque, centred | very large display, coloured words |
+| **Light** | light paper, cool neutrals, red accent, `--glow-a: 0`, zero halo | dark, blue, emissive | dark, blue, emissive | dark, pink gradient, emissive |
+| **Chat** | labelled button in the masthead | bottom-right circular bubble plus "Questions? I can help" nudge | none visible | bottom-right circular bubble plus nudge |
+
+The three prior sites read as siblings of each other: all dark, all emissive, all pill-CTA,
+two with the same bottom-right bubble and the same nudge copy. This one is the only light
+one, the only square one, the only one whose accent is not blue or pink, and the only one
+that reads as a document rather than a pitch. No waivers exist to echo here, because
+`docs/WAIVERS.md` was never needed.
+
+### Wyatt's §12.8 verdict
+
+The row below is the one thing in this run I must not fill in myself. Replace `PENDING`
+with the single word ACCEPT or REJECT. `ship.py` refuses on a missing token, refuses on
+both tokens, and refuses on REJECT, so the ship gate stays shut until you rule.
+
+| Judgement | Nav | Rhythm | Type | Light | Verdict |
+|---|---|---|---|---|---|
+| §12.8 would a stranger file these under one designer | distinct | distinct | distinct | distinct | PENDING |

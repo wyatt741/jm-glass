@@ -139,15 +139,23 @@ CONTRAST_JS = r"""() => {
   };
   const over = (fg, bg) => fg.rgb.map((c, i) => c * fg.a + bg[i] * (1 - fg.a));
   const bgOf = (el) => {
+    // Collect every painted layer from the element UP to the first opaque one,
+    // then composite bottom-up. The previous version threw away the alpha the
+    // moment it met a translucent layer (acc = c.rgb.slice()) and then fed that
+    // bare array back into over(), which expects {rgb, a} — so the first time a
+    // semi-transparent background sat over another background it crashed. No
+    // element had that shape until the hero veil.
+    const layers = [];
     let n = el;
-    let acc = null;
     while (n && n.nodeType === 1) {
       const c = parse(getComputedStyle(n).backgroundColor);
-      if (c && c.a > 0) { acc = acc ? over(acc, c.rgb).map((x) => x) : c.rgb.slice();
-        if (c.a >= 1) return acc; }
+      if (c && c.a > 0) { layers.push(c); if (c.a >= 1) break; }
       n = n.parentElement;
     }
-    return acc || [255, 255, 255];
+    let base = [255, 255, 255];               // the canvas, if nothing is opaque
+    if (layers.length && layers[layers.length - 1].a >= 1) base = layers.pop().rgb.slice();
+    for (let i = layers.length - 1; i >= 0; i--) base = over(layers[i], base);
+    return base;
   };
   const out = [];
   const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);

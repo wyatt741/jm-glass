@@ -412,92 +412,108 @@ h1, h2, h3 { text-transform: none; }
   .ask-open-txt--full { display: inline; }
 }
 
-/* ---- the opening: the photograph IS the page ----
-   The work is the product, so the frame leads and the type sits on it. The claim
-   panel is OPAQUE on purpose: text floating on a photograph has no measurable
-   contrast, because a contrast checker reads background-color and not the pixels
-   of an image, and a gradient scrim only makes legibility likely rather than
-   guaranteed. An opaque panel makes it a fact, and it echoes the drawing-sheet
-   title block the rest of the site is built from. */
-.opening {
+/* ---- the stage: a full-viewport photograph of the work being done ----
+   The reference Wyatt picked (waltersgroupinc.com) leads with an ironworker on a
+   beam, type set large straight onto the image. The move is not the layout, it is
+   the SUBJECT: a person doing skilled work reads as a company that does things,
+   where a finished building reads as a brochure.
+
+   The veil is a real background-color, not a gradient, for two reasons. A contrast
+   checker reads background-color and cannot see image pixels, so a gradient scrim
+   makes legibility a hope rather than a measurement; and at .72 the composite is
+   dark enough that white type clears AA against the veil alone, whatever the
+   photograph underneath happens to be doing. */
+.stage {
   position: relative;
-  /* the one section that escapes the page measure: the photograph runs edge to
-     edge, which is the whole point of leading with it */
   max-width: none;
-  padding-inline: 0;
-  padding-block: 0;
-  padding-bottom: clamp(28px, 4vw, 52px);
+  padding: 0;
+  min-height: clamp(460px, 88svh, 900px);
+  display: grid;
+  align-items: end;
+  isolation: isolate;
 }
-.opening-frame {
-  width: 100%;
-  /* svh, never vh: on a phone the address bar makes vh taller than the visible
-     area, so a vh hero is cropped by chrome that is not there */
-  height: clamp(300px, 58svh, 600px);
+.stage-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   overflow: hidden;
-  background: var(--surface);
+  background: var(--ink);
 }
-.opening-img {
+.stage-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 44%;
+  object-position: 50% 70%;
   display: block;
 }
-.opening-copy {
+.stage-veil {
   position: relative;
-  z-index: 2;
+  z-index: 1;
+  width: 100%;
+  background: rgba(16, 19, 22, .72);
+}
+.stage-copy {
+  position: relative;
+  z-index: 1;
   width: min(var(--measure), 100% - var(--gut) * 2);
   margin-inline: auto;
-  margin-top: clamp(-132px, -11svh, -84px);   /* pulled up over the photograph */
-  background: var(--ink);
-  color: var(--paper);
-  padding: clamp(22px, 3.2vw, 38px);
+  padding-block: clamp(40px, 9svh, 104px);
+  color: #fff;
 }
-.opening-claim {
+@media (min-width: 900px) {
+  /* the glazier sits low-left in the frame, so the words take the right half.
+     Subject one side, type the other: the same composition as the reference,
+     mirrored because our photograph is mirrored. */
+  .stage-copy > * { max-width: 44rem; margin-left: auto; }
+  /* inline-block ignores margin-left:auto, so the eyebrow needs a box.
+     Two classes, because the base rule is declared later in the file. */
+  .stage-copy > .stage-eyebrow { max-width: 44rem; margin-left: auto; }
+  .stage-acts { justify-content: flex-start; }
+}
+.stage-eyebrow {
+  font-size: .82rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: .78;
+  margin-bottom: 1.1em;
+}
+/* the rule is a pseudo-element, not a border, so the eyebrow box can share the
+   claim's left edge while the red line stays short */
+.stage-eyebrow::after {
+  content: "";
+  display: block;
+  width: 12rem;
+  max-width: 100%;
+  margin-top: .85em;
+  border-bottom: 2px solid var(--accent);
+}
+.stage-claim {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4.2vw, 2.95rem);
+  /* the scale IS the design. Walters runs 64px at 1440; condensed carries more */
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: var(--h-track-hero);
+  color: #fff;
+  margin-bottom: .38em;
+}
+.stage-sub {
+  font-size: clamp(1.05rem, 1.75vw, 1.32rem);
+  color: #fff;
+  opacity: .88;
+  max-width: 44ch;
+  margin-bottom: 1.7em;
+}
+.stage-acts { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* one sentence, set big, between the photograph and the proof */
+.creed { background: var(--ink); color: var(--paper); }
+.creed-p {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  line-height: 1.18;
   max-width: 24ch;
-  margin-bottom: .45em;
-}
-.opening-sub {
-  font-size: clamp(1.02rem, 1.7vw, 1.18rem);
   color: var(--paper);
-  opacity: .84;
-  max-width: 48ch;
-  margin-bottom: 1.4em;
-}
-.opening-acts { display: flex; flex-wrap: wrap; gap: 10px; }
-/* Both controls invert on the dark panel. The primary loses its fill against ink,
-   so it becomes a solid PAPER button: the strongest thing in the panel, which is
-   what a primary action should be. Without this the outlined secondary read as
-   the more important of the two. */
-.opening-acts .act {
-  background: var(--paper);
-  color: var(--ink);
-  border-color: var(--paper);
-}
-.opening-acts .act:hover {
-  background: var(--accent);
-  color: var(--on-accent);
-  border-color: var(--accent);
-}
-.opening-acts .act--quiet {
-  background: transparent;
-  color: var(--paper);
-  border-color: var(--paper);
-}
-.opening-acts .act--quiet:hover {
-  background: var(--paper);
-  color: var(--ink);
-  border-color: var(--paper);
-}
-@media (max-width: 699px) {
-  /* a phone headline wraps to three lines, so the frame gives back the height
-     the type takes, keeping both CTAs above the fold on a 390px screen */
-  .opening-frame { height: clamp(240px, 42svh, 400px); }
-  .opening-copy { margin-top: clamp(-76px, -6svh, -48px); }
-  .opening-claim { max-width: 17ch; font-size: clamp(1.7rem, 7.4vw, 2.1rem); }
-  .opening-sub { font-size: 1rem; margin-bottom: 1.15em; }
 }
 
 /* ---- act: the button family. 2px machined edge means pressable ---- */
@@ -525,6 +541,22 @@ h1, h2, h3 { text-transform: none; }
 .act:active { transform: scale(.97); }
 @media (hover: hover) and (pointer: fine) {
   .act:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+}
+.act--big {
+  min-height: 56px;
+  padding: 16px 30px;
+  font-size: 1.06rem;
+}
+/* on a photograph or an ink field: outlined in white, fills on hover */
+.act--ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, .55);
+}
+.act--ghost:hover {
+  background: #fff;
+  color: var(--ink);
+  border-color: #fff;
 }
 .act--quiet {
   background: transparent;
@@ -1144,4 +1176,82 @@ h1, h2, h3 { text-transform: none; }
   .js-set .set-in:nth-child(5) { transition-delay: calc(.2s * var(--motion)); }
   .js-set .set-in:nth-child(n + 6) { transition-delay: calc(.25s * var(--motion)); }
   .js-set .set-in.is-set { opacity: 1; transform: none; }
+}
+
+/* ---- the stage's own control pair ---- */
+.stage-acts .act {
+  background: #fff;
+  color: #16191d;      /* literal: the stage is dark in BOTH themes, so a theme
+                          token here inverted to white-on-white in dark mode */
+  border-color: #fff;
+}
+.stage-acts .act:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.stage-acts .act--ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, .6);
+}
+.stage-acts .act--ghost:hover {
+  background: #fff;
+  color: var(--ink);
+  border-color: #fff;
+}
+
+/* ---- everything else steps up in scale to match the stage ---- */
+.stamp-h, .shots-h, .scope-h, .gcs-h, .crew-h, .wayin-h,
+.pagehead-h, .scopesheet-h, .records-h {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.06;
+}
+.shots-head { margin-bottom: clamp(20px, 3vw, 34px); }
+.shots-lede, .stamp-lede {
+  font-size: clamp(1.02rem, 1.5vw, 1.16rem);
+  color: var(--ink-soft);
+  max-width: 52ch;
+  margin-top: .6em;
+}
+/* the lead frame is deliberately large: one photograph at size beats six thumbnails */
+.shots-lead { margin-bottom: clamp(16px, 2.4vw, 26px); }
+.shots-lead .plate img { aspect-ratio: 16 / 9; }
+.shots-more, .scope-more { margin-top: clamp(20px, 3vw, 32px); }
+
+/* the way in: an ink field, so the last thing on the sheet is an instruction */
+.wayin {
+  background: var(--ink);
+  color: var(--paper);
+  max-width: none;
+  padding-inline: 0;
+}
+.wayin > * {
+  width: min(var(--measure), 100% - var(--gut) * 2);
+  margin-inline: auto;
+}
+.wayin-h { color: var(--paper); }
+.wayin-p {
+  color: var(--paper);
+  opacity: .86;
+  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+  max-width: 46ch;
+  margin: .7em auto 1.6em;
+}
+.wayin .act {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.wayin .act:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+
+@media (max-width: 699px) {
+  .stage { min-height: clamp(420px, 82svh, 720px); }
+  .stage-claim { font-size: clamp(2.1rem, 9.2vw, 3rem); }
+  .stage-sub { font-size: 1.02rem; }
+  .shots-lead .plate img { aspect-ratio: 4 / 3; }
 }

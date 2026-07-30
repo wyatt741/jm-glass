@@ -373,6 +373,53 @@ Verified across 360, 390, 430, 768, 1440 and 1920: full bleed at every width, bo
 the fold everywhere, **0 horizontal overflow**. `gate.py` green, Impeccable detector clean,
 `visual_qa.py` **54/54**, overlap still **0 against all five** registry sites.
 
+## Phase 10, rebuilt in the Walters language, 2026-07-30
+
+Wyatt: *"this website is ass"*, then *"what prompt do most people use"*, then
+`waltersgroupinc.com` *"looks good"*, then *"make the entire website like theirs"*.
+
+**The honest diagnosis of why it was plain.** KICKOFF's headline bar was near-zero class
+overlap with the prior sites, and the PLAYBOOK bans the whole popular vocabulary (pill nav,
+three-across cards, gradient hero, CTA band). So the build optimised hard for *"a stranger
+would not file this under one designer"* and hit it five times over. But that is a **proxy**,
+and the thing it was a proxy for is what Wyatt was judging. Distinct is not the same as good.
+Every design input was a rule or a research finding; there was never a site he could point at.
+
+**What was adopted from the reference** (its language, not its markup): a full-viewport
+photograph of a person doing skilled work, type set large directly on the image, a one-line
+statement between the photo and the proof, then the work, then the way in.
+
+**What was deliberately NOT adopted:** their testimonial block (J&M have no usable review),
+their careers block (no evidence they are hiring), their news feed (none exists), their blue.
+Those sections do not exist here rather than being filled with invention.
+
+**The hero photograph is the whole change.** The reference leads with an ironworker on a beam.
+J&M own exactly one frame of that kind, `storage-co-3.jpg`: a glazier in a lift, arm raised,
+setting reflective glass into a two-storey curtain wall. It had been the hero, and **I moved
+away from it in phase 9 because it is only 960px wide and I wanted resolution for a full
+bleed**. That was the wrong trade, and it is why the hero read as a stock building shot. It is
+back, cropped low (`object-position: 50% 70%`) so the glazier is actually in frame, with the
+type on the right because he stands on the left.
+
+Three defects found by measurement while building it:
+
+| Found | Fix |
+|---|---|
+| **The veil was a SIBLING of the type, not an ancestor.** A contrast checker walks ancestors, so it never saw the veil and measured white-on-white: **1.08:1** across the whole hero | The veil now wraps the copy. It is also simply true: the veil is what the type sits on |
+| **`.act--ghost` was used on the light sections** ("All 21 projects"), so white text sat on white | Those revert to `act--quiet` |
+| **The stage buttons used theme tokens.** The stage is dark in BOTH themes, so in dark mode `var(--ink)` inverted to light and gave a white button with white text | Literal colours on the stage only |
+
+**A third bug in my own QA harness**, exposed by the veil: `bgOf` discarded the alpha the moment
+it met a translucent layer, then fed a bare array back into the compositor and threw. No element
+had ever had a semi-transparent background over another background, so the path had never run.
+It now collects layers up to the first opaque one and composites bottom-up.
+
+Also caught: the rebuild added `body_class="sheet home"`, and **`home` is a class in three prior
+sites** — overlap went 0 to 1. Dropped; back to **0 against all five**.
+
+Final: `gate.py` green, Impeccable detector clean, `visual_qa.py` **54/54**, overlap **0**,
+148 authored classes.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

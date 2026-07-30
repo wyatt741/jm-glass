@@ -115,7 +115,7 @@ SCOPES = [
     ("Aluminum storefront", "family-dollar-3.jpg",
      "Framed storefront systems in clear or tinted insulated glass, set with "
      "entrance doors, sidelites and transoms."),
-    ("Curtain wall", "cfc-5.jpg",
+    ("Curtain wall", "cfc-4.jpg",
      "Multi-story aluminum curtain wall glazed with reflective insulated units, "
      "set from lifts."),
     ("Window wall", "chop-shop-4.jpg",
@@ -327,15 +327,19 @@ def askwidget():
 # ============================ PAGES ============================
 
 def home():
-    hero = BY_FILE["cfc-4.jpg"]
-    # The hero photograph IS the page. Emitted directly rather than through plate()
-    # because it is not a framed grid cell: it bleeds the full viewport, and the
-    # claim sits on an opaque panel over it so the contrast is real and measurable.
+    # The hero is a PERSON DOING THE WORK, not a finished building. That is the
+    # single move that separates a contractor site that feels alive from one that
+    # feels like a brochure, and J&M own exactly one frame of it: a glazier on a
+    # lift setting reflective glass into a two-storey curtain wall. It is only
+    # 960px wide, which is the honest ceiling of what their server had; at
+    # full-bleed behind a dark scrim the softness does not read.
+    hero = BY_FILE["storage-co-3.jpg"]
     hero_full = (
-        f'<img class="opening-img" src="{hero["src"]}" '
+        f'<img class="stage-img" src="{hero["src"]}" '
         f'srcset="{hero["src"][:-4]}-sm.jpg {hero["sm"]}w, {hero["src"]} {hero["w"]}w" '
         f'sizes="100vw" alt="{hero["alt"]}" width="{hero["w"]}" height="{hero["h"]}" '
         f'fetchpriority="high" decoding="async">')
+
     scope_rows = "".join(
         f'<li class="scope-item"><h3 class="scope-name">{name}</h3>'
         f'<p class="scope-note">{note}</p></li>'
@@ -346,11 +350,13 @@ def home():
         f'<dd class="stamp-val">{v}<span class="stamp-note">{note}</span></dd></div>'
         for k, v, note in RECORD)
 
-    # a mullion grid of six frames spanning building types, not one project
-    preview = [BY_FILE[f] for f in ("johnny-was.jpg", "cfc-1.jpg", "esplanade-1.jpg",
-                                    "medical-2.jpg", "chop-shop-1.jpg", "credit-union-3.jpg")]
-    tiles = "".join(f'<div class="lite">{plate(p, sizes=SZ_THREE)}</div>'
-                    for p in preview)
+    # the work, led by photographs at size rather than a tidy grid of thumbnails
+    lead = BY_FILE["cfc-1.jpg"]
+    rest = [BY_FILE[f] for f in ("johnny-was.jpg", "esplanade-1.jpg",
+                                 "medical-2.jpg", "chop-shop-1.jpg")]
+    lead_plate = plate(lead, sizes="(min-width:900px) 58vw, 100vw")
+    rest_tiles = "".join(f'<div class="lite">{plate(p, sizes=SZ_THREE)}</div>'
+                         for p in rest)
 
     marks = "".join(
         f'<li class="gc"><img class="gc-img" src="assets/gc/{f}" alt="{name}" '
@@ -360,17 +366,25 @@ def home():
     team = MANIFEST["team"]
     body = f'''{titleblock("index.html")}
 <main id="main">
-  <section class="opening">
-    <div class="opening-frame">{hero_full}</div>
-    <div class="opening-copy">
-      <h1 class="opening-claim">Commercial glazing for Arizona general contractors.</h1>
-      <p class="opening-sub">Storefront, curtain wall, window wall and interior glass.
-        Licensed in Arizona since 2015.</p>
-      <p class="opening-acts">
-        <a class="act" href="contact.html">Send a bid invitation</a>
-        <a class="act act--quiet" href="on-the-job.html">See the scope list</a>
+  <section class="stage">
+    <div class="stage-frame">{hero_full}</div>
+    <div class="stage-veil">
+    <div class="stage-copy">
+      <p class="stage-eyebrow">Commercial glazing, Phoenix</p>
+      <h1 class="stage-claim">Glass and aluminum,<br>set by the crew that bid it.</h1>
+      <p class="stage-sub">Storefront, curtain wall, window wall and interior glass for
+        Arizona general contractors.</p>
+      <p class="stage-acts">
+        <a class="act act--big" href="on-the-job.html">See the work</a>
+        <a class="act act--ghost" href="contact.html">Send a bid invitation</a>
       </p>
     </div>
+    </div>
+  </section>
+
+  <section class="creed">
+    <p class="creed-p">{SHOWN_PROJECTS} Arizona projects, {len(SCOPES)} scopes, and a
+      license you can check in under a minute.</p>
   </section>
 
   <section class="stamp" aria-labelledby="stamp-h">
@@ -380,20 +394,25 @@ def home():
     <dl class="stamp-grid" data-set-in>{record_rows}</dl>
   </section>
 
+  <section class="shots" aria-labelledby="shots-h">
+    <div class="shots-head">
+      <h2 class="shots-h" id="shots-h">The work</h2>
+      <p class="shots-lede">Every photograph on this site is from one of our own jobs.
+        Nothing here is stock.</p>
+    </div>
+    <div class="shots-lead">{lead_plate}</div>
+    <div class="glazing glazing--four" data-set-in>{rest_tiles}</div>
+    <p class="shots-more"><a class="act act--quiet" href="on-the-job.html">All {SHOWN_PROJECTS} projects</a></p>
+  </section>
+
   <section class="scope" aria-labelledby="scope-h">
-    <h2 class="scope-h" id="scope-h">The work we do</h2>
+    <h2 class="scope-h" id="scope-h">What we work in</h2>
     <ul class="scope-list" data-set-in>{scope_rows}</ul>
     <p class="scope-more"><a class="act act--quiet" href="on-the-job.html">Each scope, with the work behind it</a></p>
   </section>
 
-  <section class="shots" aria-labelledby="shots-h">
-    <h2 class="shots-h" id="shots-h">Work in Arizona</h2>
-    <div class="glazing">{tiles}</div>
-    <p class="shots-more"><a class="act act--quiet" href="on-the-job.html">All {SHOWN_PROJECTS} projects</a></p>
-  </section>
-
   <section class="gcs" aria-labelledby="gcs-h">
-    <h2 class="gcs-h" id="gcs-h">General contractors and developers we have glazed for</h2>
+    <h2 class="gcs-h" id="gcs-h">Who we glaze for</h2>
     <ul class="gc-list" data-set-in>{marks}</ul>
   </section>
 
@@ -416,12 +435,19 @@ def home():
       </figure>
     </div>
   </section>
+
+  <section class="wayin" aria-labelledby="wayin-h">
+    <h2 class="wayin-h" id="wayin-h">Bidding something?</h2>
+    <p class="wayin-p">Send the drawings and the bid date. We will tell you quickly
+      whether we are bidding it.</p>
+    <p><a class="act act--big" href="contact.html">Send a bid invitation</a></p>
+  </section>
 </main>
 {sheetfoot()}'''
     return SITE.page(
         f"{SITE.biz} | Commercial Glazing Phoenix",
-        "Commercial glazing and tenant improvement in Phoenix. Storefront, curtain "
-        "wall, window wall and interior glass. AZ ROC 302375, licensed since 2015.",
+        f"Commercial glazing and tenant improvement in Phoenix. Storefront, curtain "
+        f"wall, window wall and interior glass. AZ ROC 302375, licensed since 2015.",
         "index.html", body, body_class="sheet")
 
 

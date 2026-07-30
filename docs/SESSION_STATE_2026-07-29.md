@@ -1,12 +1,13 @@
 # jm-glass — Session State (2026-07-29)
 
-**Started / Last Updated:** 2026-07-29 ~19:00 PDT, last updated 2026-07-30 00:15 PDT. One
+**Started / Last Updated:** 2026-07-29 ~19:00 PDT, last updated 2026-07-30 01:05 PDT. One
 continuous session that rolled past midnight, so this doc covers both dates; gate stamps carry
 UTC. Updated in place rather than split, because it is one session.
 **Project:** `/Users/Wyatt/Documents/Claude/jm-glass`
-**Topic:** Full rebuild of the J&M Glass LLC site with the new site-v2 runner. Phases 0-7
+**Topic:** Full rebuild of the J&M Glass LLC site with the new site-v2 runner. Phases 0-8
 complete. **SHIPPED as a client preview and verified live at
-https://wyatt741.github.io/jm-glass/.**
+https://wyatt741.github.io/jm-glass/**, then edited down from four pages to three after
+Wyatt read it.
 
 ## What We Are Building / Doing
 
@@ -72,6 +73,36 @@ site is gated against its vocabulary too.
 `chat.jmglassllc.com`, which does not resolve until the cutover, so deploying now would leave
 an orphan Worker on a `workers.dev` URL that PLAYBOOK §6 forbids serving the bot from. The
 canned answers carry the preview.
+
+## Phase 8 — the post-preview edit (added 2026-07-30)
+
+Wyatt read the shipped preview and asked two questions. Both were right. Both were **checked
+against the files before acting**, which is the part worth repeating: agreeing immediately
+would have been worse than measuring.
+
+**"Shouldn't the scope and projects be the same page?"** Measured: `scope.html`'s twelve
+photographs were **all twelve already on `projects.html`** (zero unique), and its twelve names
+and notes were **byte-identical** to the list already on the home sheet. A third presentation
+of content that existed twice. Merged into **`on-the-job.html`** — his name, chosen over
+"Work" (*"work page sounds lame"*, and he is right, it is a designer's word not a glazier's).
+Structure: the 12 scopes with photographs, the 21-project record with its filter, the curtain
+wall capability frames, the bid CTA. Home keeps a text-only scope teaser.
+
+**"Why are we saying commercial only? Isn't that a given?"** Half right, and the half that
+matters. It appeared **11 times across 4 pages**, including the masthead strip of every one.
+To a GC estimator it IS a given. It is NOT a given from outside: their ROC class is CR-65
+**Specialty Dual**, which covers residential; their Facebook posted pool-fence work; a current
+homepage icon is a shower; the two recent Google reviews describe automotive work. So the fact
+earns a place, but its job is deflecting residential callers, not informing estimators. Cut
+from the masthead, hero sub and crew copy; kept in the footer and on contact. **11 to 4**, and
+the masthead is down to ROC and the phone number.
+
+Self-caught on review: the new subhead mixed a spelled "Twelve" with a numeral "21". Both
+counts are now derived (`len(SCOPES)`, `SHOWN_PROJECTS`).
+
+Re-verified: `gate.py` green, **overlap still 0 against all five** registry sites on 131
+classes, `visual_qa.py` **54/54** across 3 pages x 2 widths x 2 themes, Pages built at HEAD
+(`d566bea`), `/scope.html` and `/projects.html` now **404** live.
 
 ## What WORKED (with evidence)
 
@@ -332,7 +363,8 @@ python3 tools/serve.py 8412     # preview at http://127.0.0.1:8412 (HTTP/1.1 + t
 ## Exact Next Step
 
 **Send J&M https://wyatt741.github.io/jm-glass/ and wait for their reaction.** Nothing in the
-repo is blocked.
+repo is blocked. The preview already reflects Wyatt's own first review (three pages, and
+"commercial only" pulled back to the footer and contact sheet).
 
 When they approve, the LIVE cutover is one motion (all of it, together, per the standing rule):
 

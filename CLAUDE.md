@@ -2,13 +2,15 @@
 
 > ⭐ **LATEST SESSION — 2026-07-29/30.** **SHIPPED as a client preview:**
 > **https://wyatt741.github.io/jm-glass/** — noindex, `robots.txt Disallow: /`, no CNAME, not
-> their domain. Repo `wyatt741/jm-glass` is public (Pages requires it). Verified live: all 4
-> pages 200, and `docs/research/`, `docs/RESEARCH_BRIEF.md`, `build.py`, `tools/` and
+> their domain. **Three pages** after a post-preview edit merged scope into
+> `on-the-job.html` and cut "commercial only" from 11 mentions to 4. Repo
+> `wyatt741/jm-glass` is public (Pages requires it). Verified live: all three pages 200, and
+> `docs/research/`, `docs/RESEARCH_BRIEF.md`, `build.py`, `tools/`, `CLAUDE.md` and
 > `assets/src/` all **404** on the real origin, so the `_config.yml` exclusion holds.
 >
 > Built end to end with the **site-v2 runner** (the template's first real client site).
-> **Class overlap 0 against all five prior registry sites** on 128 authored classes; the
-> attempt this replaces shared 41. jm-glass is now itself in the registry (131 classes).
+> **Class overlap 0 against all five prior registry sites** (131 authored classes after the
+> merge); the attempt this replaces shared 41. jm-glass is now itself the 6th registry entry.
 >
 > **An Impeccable audit plus two adversarial rounds found 33 real defects; all fixed.** Four
 > were regressions from my own fixes and two were bugs in my QA harness, so treat a green
@@ -25,16 +27,19 @@
 
 ## What this is
 
-A four-page static site for **J&M Glass LLC**, a commercial glazing and tenant-improvement
+A three-page static site for **J&M Glass LLC**, a commercial glazing and tenant-improvement
 contractor in Phoenix, AZ. Built on the Website Template engine: `engine.py` supplies
 mechanics only, and every visible component here was authored for this business.
 
 | Page | Job |
 |---|---|
-| `index.html` | The whole case: what they self-perform, the checkable licence, proof of work, the bid path |
-| `scope.html` | 12 scopes, each with a photograph of the work behind it |
-| `projects.html` | 22 named Arizona projects, 54 photographs, filterable by Commercial Shell / Tenant Improvement |
+| `index.html` | The whole case: the work they do, the checkable license, proof, the bid path |
+| `on-the-job.html` | The 12 scopes with their photographs, then the 21-project record with its Commercial Shell / Tenant Improvement filter, then the curtain wall capability frames |
 | `contact.html` | The bid path: what to send, direct contacts, the invitation form |
+
+Was four pages until 2026-07-30. `scope.html` was cut after measuring that all twelve of its
+photographs were already on `projects.html` and its twelve names and notes were byte-identical
+to the list on the home page; the two were merged into `on-the-job.html`.
 
 ## Facts that are settled and must not drift
 

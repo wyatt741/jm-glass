@@ -84,6 +84,28 @@
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paint);
   }
 
+  /* ---- setting in: reveal the evidence as it arrives ----
+     IntersectionObserver, never a scroll listener. Only the photo grids and the
+     credential rows are marked: motion that confirms nothing is decoration, and
+     this reader is on a bid deadline. Bails out entirely under reduced motion and
+     when the observer is unavailable, leaving everything visible. ---- */
+  const setIn = document.querySelectorAll('[data-set-in] > *');
+  if (setIn.length && 'IntersectionObserver' in window
+      && !window.site.prefersReducedMotion()) {
+    document.documentElement.classList.add('js-set');
+    // No inline styles: the stagger is a CSS nth-child rule, so the whole look
+    // still lives in the stylesheet and a reader can find it there.
+    setIn.forEach((el) => el.classList.add('set-in'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-set');
+        io.unobserve(e.target);          // one-way: never re-hide on scroll back
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    setIn.forEach((el) => io.observe(el));
+  }
+
   /* ---- publish the title block's height so the assistant panel and its nudge can
      hang off the trigger rather than off a screen corner. The masthead is three
      rows on a phone and one on desktop, so this cannot be a constant. ---- */

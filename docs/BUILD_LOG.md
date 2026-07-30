@@ -332,6 +332,47 @@ Re-verified after the edit: `gate.py` green, **overlap still 0 against all five*
 sites on 131 classes, `visual_qa.py` **54 assertions 0 failures** across 3 pages x 2 widths x
 2 themes.
 
+## Phase 9, image-forward hero and motivated motion, 2026-07-30
+
+Wyatt: *"shouldnt we lead with pictures first? wheres the animations or the taste design
+skill?"* Checked before answering.
+
+**The taste skills did run** — `design-taste-frontend` and `emil-design-eng`, both loaded in
+phase 3 before any CSS, dials recorded in `docs/DESIGN_READ.md`. Their output was almost
+entirely **subtractive** (0 eyebrows sitewide, no three-across cards, no centred hero, no
+marquee, no scroll cues, no decorative dots), which is real work that is invisible by
+construction. A fair complaint even so, because you cannot see an absence.
+
+**On animations he was right.** Measured: 11 transitions, 1 keyframe, and the only
+`IntersectionObserver` was wired to the chat nudge. No entrance motion anywhere. "Near-zero
+motion" was derived correctly from the trade row of PLAYBOOK §9 and then **over-applied**:
+press feedback is motivated motion, and so is revealing evidence in the order a reader meets
+it. Added `.set-in`, an IntersectionObserver reveal on the photo grids, the credential rows,
+the scope list and the GC marks only. Nav, type and controls never animate. Verified: **42
+elements reveal on scroll; under `prefers-reduced-motion` zero are marked and everything
+renders at full opacity.**
+
+**On leading with pictures he was right too, and it was the biggest of the three.** The hero
+was text-left / photo-right, giving type primacy on a site whose entire value is 52
+photographs. Now a **full-bleed photograph** with the claim on an opaque title-block panel
+over it.
+
+Three things that fell out of building it, each caught by measurement rather than eye:
+
+| Found | Fix |
+|---|---|
+| The old hero frame was `storage-co-3.jpg`, whose source is only **960x720** — too soft for full bleed | Switched to `cfc_4.jpg`, the largest usable landscape frame (**1920x1440**, strong, no identifiable face) and the one that shows curtain wall, the highest-value scope. Re-emitted at 1800px. The curtain wall scope cell moved to `cfc-5` so the hero is not repeated |
+| Text on a photograph has **no measurable contrast** — a checker reads `background-color`, not image pixels, so a gradient scrim only makes legibility likely | The claim sits on an **opaque** panel. Contrast becomes a fact, and it echoes the drawing-sheet title block the rest of the site is built from |
+| The primary CTA **lost its fill** on the dark panel, so the outlined secondary read as more important. Contrast passed; hierarchy was inverted | Primary inverts to a solid paper button on the panel in both themes |
+
+Also: the first reveal implementation set `--i` per element with `el.style.setProperty`, which
+is a runtime inline style. Replaced with a CSS `nth-child` stagger so the whole look stays in
+the stylesheet. **0 inline style attributes in the output.**
+
+Verified across 360, 390, 430, 768, 1440 and 1920: full bleed at every width, both CTAs above
+the fold everywhere, **0 horizontal overflow**. `gate.py` green, Impeccable detector clean,
+`visual_qa.py` **54/54**, overlap still **0 against all five** registry sites.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

@@ -27,7 +27,9 @@ SMALL = 500     # the phone-width variant. Without a second width the `sizes`
                 # attribute is inert and a 430px phone downloads the 1000px file.
 QUALITY = 82
 
-HERO_FILE = "storage-co-3.jpg"
+# the full-bleed hero. cfc_4 is the largest usable landscape frame (1920x1440),
+# strong, no identifiable face, and it shows curtain wall, the highest-value scope.
+HERO_FILE = "cfc_4.jpg"
 
 # verified from their own WordPress taxonomy: 37 Commercial Shell, 36 Tenant Improvements
 PROJECT_TYPE = {37: "Commercial Shell", 36: "Tenant Improvements"}

@@ -115,7 +115,7 @@ SCOPES = [
     ("Aluminum storefront", "family-dollar-3.jpg",
      "Framed storefront systems in clear or tinted insulated glass, set with "
      "entrance doors, sidelites and transoms."),
-    ("Curtain wall", "cfc-4.jpg",
+    ("Curtain wall", "cfc-5.jpg",
      "Multi-story aluminum curtain wall glazed with reflective insulated units, "
      "set from lifts."),
     ("Window wall", "chop-shop-4.jpg",
@@ -327,7 +327,15 @@ def askwidget():
 # ============================ PAGES ============================
 
 def home():
-    hero = BY_FILE["storage-co-3.jpg"]
+    hero = BY_FILE["cfc-4.jpg"]
+    # The hero photograph IS the page. Emitted directly rather than through plate()
+    # because it is not a framed grid cell: it bleeds the full viewport, and the
+    # claim sits on an opaque panel over it so the contrast is real and measurable.
+    hero_full = (
+        f'<img class="opening-img" src="{hero["src"]}" '
+        f'srcset="{hero["src"][:-4]}-sm.jpg {hero["sm"]}w, {hero["src"]} {hero["w"]}w" '
+        f'sizes="100vw" alt="{hero["alt"]}" width="{hero["w"]}" height="{hero["h"]}" '
+        f'fetchpriority="high" decoding="async">')
     scope_rows = "".join(
         f'<li class="scope-item"><h3 class="scope-name">{name}</h3>'
         f'<p class="scope-note">{note}</p></li>'
@@ -353,6 +361,7 @@ def home():
     body = f'''{titleblock("index.html")}
 <main id="main">
   <section class="opening">
+    <div class="opening-frame">{hero_full}</div>
     <div class="opening-copy">
       <h1 class="opening-claim">Commercial glazing for Arizona general contractors.</h1>
       <p class="opening-sub">Storefront, curtain wall, window wall and interior glass.
@@ -362,19 +371,18 @@ def home():
         <a class="act act--quiet" href="on-the-job.html">See the scope list</a>
       </p>
     </div>
-    <div class="opening-plate">{plate(hero, eager=True, sizes=SZ_HERO)}</div>
   </section>
 
   <section class="stamp" aria-labelledby="stamp-h">
     <h2 class="stamp-h" id="stamp-h">The record, checkable</h2>
     <p class="stamp-lede">Every line below can be verified without asking us.
       The license is public at <a href="https://roc.az.gov/" target="_blank" rel="noopener">roc.az.gov</a>.</p>
-    <dl class="stamp-grid">{record_rows}</dl>
+    <dl class="stamp-grid" data-set-in>{record_rows}</dl>
   </section>
 
   <section class="scope" aria-labelledby="scope-h">
     <h2 class="scope-h" id="scope-h">The work we do</h2>
-    <ul class="scope-list">{scope_rows}</ul>
+    <ul class="scope-list" data-set-in>{scope_rows}</ul>
     <p class="scope-more"><a class="act act--quiet" href="on-the-job.html">Each scope, with the work behind it</a></p>
   </section>
 
@@ -386,7 +394,7 @@ def home():
 
   <section class="gcs" aria-labelledby="gcs-h">
     <h2 class="gcs-h" id="gcs-h">General contractors and developers we have glazed for</h2>
-    <ul class="gc-list">{marks}</ul>
+    <ul class="gc-list" data-set-in>{marks}</ul>
   </section>
 
   <section class="crew" aria-labelledby="crew-h">
@@ -451,7 +459,7 @@ def on_the_job():
         {where}
         <ul class="record-tags">{tags}</ul>
       </div>
-      <div class="glazing glazing--four record-plates">{plates}</div>
+      <div class="glazing glazing--four record-plates" data-set-in>{plates}</div>
     </article>'''
 
     caps = "".join(
@@ -468,7 +476,7 @@ def on_the_job():
 
   <section class="scopesheet" aria-labelledby="scopes-h">
     <h2 class="scopesheet-h" id="scopes-h">The {len(SCOPES)} scopes</h2>
-    <ul class="glazing glazing--two">{cells}</ul>
+    <ul class="glazing glazing--two" data-set-in>{cells}</ul>
   </section>
 
   <section class="records-sheet" aria-labelledby="record-h">
@@ -488,7 +496,7 @@ def on_the_job():
     <h2 class="cap-h" id="cap-h">Curtain wall</h2>
     <p class="cap-p">These frames are from our own curtain wall work. They are shown as
       capability photographs because the project they belong to is not published.</p>
-    <div class="glazing glazing--four">{caps}</div>
+    <div class="glazing glazing--four" data-set-in>{caps}</div>
   </section>
 
   <section class="askline">

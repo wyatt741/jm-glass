@@ -269,11 +269,38 @@ of either path or the disclosure string anywhere in history. The files stay on d
 and are backed up at `../jm-glass-research-private/`. Nothing had been pushed, so this cost
 nothing; after a first push it would have been impossible.
 
-### Wyatt's §12.8 verdict
+### Phase 7, SHIPPED as a preview, 2026-07-30
+
+**Live at https://wyatt741.github.io/jm-glass/** — noindex, `robots.txt Disallow: /`, no
+CNAME, not the client's domain. Repo `wyatt741/jm-glass` created public (Pages requires it),
+Pages build `7c8710e` succeeded in 39s.
+
+Verified live, not assumed: all 4 pages, `styles.css`, `app.js`, `og-image.jpg` and the
+woff2 return **200**; `docs/research/competitors.md`, `docs/research/gbp-reviews.md`,
+`docs/RESEARCH_BRIEF.md`, `docs/BUILD_LOG.md`, `build.py`, `tools/serve.py` and
+`assets/src/media.json` all return **404**, so the `_config.yml` exclusion holds on the real
+origin. Served canonicals point at the preview base, never at jmglassllc.com. Rendered in a
+browser at 1440 to confirm it looks like what was built.
+
+**The §12.8 verdict was NOT required and was NOT written.** Wyatt changed the rule
+mid-session: *"the site template should auto accept and produce the preview. i shouldnt be
+stopping you telling you to do so."* The judgement exists to protect the client's public
+face, and a noindex preview on a URL that is not theirs is how a human gets to look at the
+site in order to judge it, so gating the preview on it made the deciding artifact
+unreachable until you had decided. `ship.py` and `preflight.py` now defer both the verdict
+and the Worker deploy to the LIVE ship (template commit `1c1a410`). Every mechanical gate
+still ran.
+
+The Worker was deliberately not deployed: the widget's `WORKER_URL` is
+`chat.jmglassllc.com`, which does not resolve until the cutover, so deploying now would
+leave an orphan Worker on a workers.dev URL that PLAYBOOK §6 forbids serving the bot from.
+The canned answers carry the preview.
+
+### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`
-with the single word ACCEPT or REJECT. `ship.py` refuses on a missing token, refuses on
-both tokens, and refuses on REJECT, so the ship gate stays shut until you rule.
+with the single word ACCEPT or REJECT before the cutover. `ship.py` refuses a LIVE ship on a
+missing token, on both tokens, and on REJECT.
 
 | Judgement | Nav | Rhythm | Type | Light | Verdict |
 |---|---|---|---|---|---|

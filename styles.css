@@ -65,6 +65,17 @@
      the 3:1 non-text floor). Tracking --ink means it always contrasts with the page, and
      outline-offset keeps the ring on the page rather than on a coloured control. Override
      only after measuring. */
+  /* text on an accent fill. White stays white on both themes, because the fill is
+     the brand red in both, so this must NOT track --paper. */
+  --on-accent: #ffffff;
+  /* The accent as TEXT. #db1e22 is a fill colour: on the dark surface it measures
+     3.48:1, which fails 1.4.3 for normal text, so hover states use this instead.
+     Light keeps the true brand red, dark lifts to the soft tint. */
+  --accent-text: #db1e22;
+  /* Field boundaries need 3:1 as a non-text UI component (1.4.11). --line is a
+     hairline rule at ~1.3:1 and is not enough to bound an input. */
+  --field-line: #6b727a;
+
   --focus: var(--ink);
   /* --- end DIRECTION KNOBS --- */
 }
@@ -81,6 +92,8 @@
    docs/direction.json. Knobs live in :root, once. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --accent-text: #e8595c;
+    --field-line: #8b939b;
     --ink: #eceef0;
     --ink-soft: #b4bac1;
     --paper: #101316;
@@ -92,6 +105,8 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
+  --accent-text: #e8595c;
+  --field-line: #8b939b;
   --ink: #eceef0;
   --ink-soft: #b4bac1;
   --paper: #101316;
@@ -102,7 +117,12 @@
 
 :root[data-theme="light"] { color-scheme: light; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* the masthead is sticky, so every in-page landing needs to clear it. app.js
+     publishes --tb-h from the real measured height. */
+  scroll-padding-top: calc(var(--tb-h, 88px) + 8px);
+}
 
 body {
   background: var(--paper);
@@ -199,7 +219,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---- sheet: the page measure ---- */
 .sheet { --gut: 20px; --measure: 1280px; }
-.sheet-in,
 .tblock-in,
 .sf-in,
 main > section { max-width: var(--measure); margin-inline: auto; padding-inline: var(--gut); }
@@ -207,6 +226,7 @@ main > section { max-width: var(--measure); margin-inline: auto; padding-inline:
 @media (min-width: 1100px) { .sheet { --gut: 48px; } }
 
 main > section { padding-block: clamp(40px, 6vw, 76px); }
+#main { scroll-margin-top: calc(var(--tb-h, 88px) + 8px); }
 main > section + section { border-top: 1px solid var(--line); }
 
 h1, h2, h3 { text-transform: none; }
@@ -263,7 +283,7 @@ h1, h2, h3 { text-transform: none; }
   min-height: 44px;
   min-width: 44px;
 }
-.tb-val a:hover { color: var(--accent); }
+.tb-val a:hover { color: var(--accent-text); }
 
 .jump { grid-area: jump; }
 .jump-list {
@@ -274,10 +294,9 @@ h1, h2, h3 { text-transform: none; }
   margin-left: -10px;
 }
 .jump-a {
-  display: block;
+  display: flex;
   padding: 10px;
   min-height: 44px;
-  display: flex;
   align-items: center;
   font-family: var(--font-display);
   font-weight: 600;
@@ -314,6 +333,37 @@ h1, h2, h3 { text-transform: none; }
 .daylight:active { transform: scale(.97); }
 @media (hover: hover) and (pointer: fine) {
   .daylight:hover { border-color: var(--ink-soft); color: var(--ink); }
+}
+
+@media (max-width: 699px) {
+  /* Three rows measured 178px, 21% of a 390x844 phone. ROC and Scope give way
+     because they are repeated in the footer and on the contact sheet. Tap-to-call
+     STAYS: on a phone it is the primary conversion for a trade contractor, and
+     hiding it to save 26px was the wrong trade. */
+  .tblock-data .tb-field:not(.tb-field--call) { display: none; }
+  .tblock-in {
+    /* the phone rides the top row beside the mark, so the sticky chrome is TWO
+       rows and still carries tap-to-call */
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "mark data acts" "jump jump jump";
+    gap: 0 10px;
+    padding-block: 8px;
+  }
+  .tblock-mark { width: 132px; }
+  .tblock-data { font-size: 12px; }
+  .tb-field--call .tb-key { display: none; }   /* the number reads as a number */
+  .tblock-acts { gap: 6px; }
+  .ask-open, .daylight { padding-inline: 10px; font-size: 13px; }
+}
+
+/* tablets have room for the mark and the data strip on one line, so they get two
+   rows rather than three */
+@media (min-width: 700px) and (max-width: 899px) {
+  .tblock-in {
+    grid-template-columns: 172px 1fr auto;
+    grid-template-areas: "mark data acts" "jump jump jump";
+    gap: 4px 20px;
+  }
 }
 
 @media (min-width: 900px) {
@@ -354,7 +404,7 @@ h1, h2, h3 { text-transform: none; }
 }
 .ask-open:active { transform: scale(.97); }
 @media (hover: hover) and (pointer: fine) {
-  .ask-open:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .ask-open:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 }
 .ask-open-txt--full { display: none; }
 @media (min-width: 1080px) {
@@ -412,7 +462,7 @@ h1, h2, h3 { text-transform: none; }
 }
 .act:active { transform: scale(.97); }
 @media (hover: hover) and (pointer: fine) {
-  .act:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .act:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 }
 .act--quiet {
   background: transparent;
@@ -420,7 +470,7 @@ h1, h2, h3 { text-transform: none; }
   border-color: var(--line);
 }
 @media (hover: hover) and (pointer: fine) {
-  .act--quiet:hover { background: transparent; color: var(--accent); border-color: var(--accent); }
+  .act--quiet:hover { background: transparent; color: var(--accent-text); border-color: var(--accent-text); }
 }
 
 /* ---- stamp: the checkable licence record ---- */
@@ -498,17 +548,19 @@ h1, h2, h3 { text-transform: none; }
 .glazing {
   display: grid;
   gap: 0;
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  list-style: none;          /* it is a <ul> on the scope sheet: reset the markers */
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .glazing--two { grid-template-columns: minmax(0, 1fr); }
+/* Every rule lives on the CELL, never on the container. A project with one photo
+   in a four-column grid used to leave the container's top and left rules hanging
+   past the last cell with nothing to close them. */
 .lite {
   background: var(--paper);
   padding: 0;
   min-width: 0;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);
+  margin: -1px 0 0 -1px;     /* collapse the shared edges back to one hairline */
 }
 @media (min-width: 700px) {
   .glazing { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -523,6 +575,9 @@ h1, h2, h3 { text-transform: none; }
   height: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  /* 26 of the published frames are portrait. A centred crop cut the head off the
+     opening; the subject of a glazing photograph sits above the middle. */
+  object-position: 50% 38%;
   display: block;
 }
 .plate-cap {
@@ -535,7 +590,7 @@ h1, h2, h3 { text-transform: none; }
 .shots-more, .scope-more { margin-top: 1.5em; }
 
 /* ---- scope sheet: 12 cells, one per scope ---- */
-.scopesheet { padding-top: 0 !important; }
+.scopesheet { padding-top: 0 !important; border-top: 0; }
 .scope-cell { padding-bottom: 18px; }
 .scope-cell .plate { margin-bottom: 14px; }
 .scope-cell-name {
@@ -559,6 +614,7 @@ h1, h2, h3 { text-transform: none; }
 .pagehead-sub { color: var(--ink-soft); max-width: 58ch; font-size: 1.05rem; }
 
 /* ---- project record ---- */
+.filterbar[hidden] { display: none; }
 .filterbar {
   display: flex;
   flex-wrap: wrap;
@@ -638,14 +694,12 @@ h1, h2, h3 { text-transform: none; }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 0;
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
   margin-top: 1.5em;
 }
 .gc {
   background: #f7f8f9;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);
+  margin: -1px 0 0 -1px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -679,9 +733,7 @@ h1, h2, h3 { text-transform: none; }
   padding-bottom: .35em;
   border-bottom: 1px solid var(--line);
 }
-.bid-h + .bid-h,
-.bid-list + .bid-h,
-.bid-data + .bid-h { margin-top: 2.2em; }
+.bid-list + .bid-h { margin-top: 2.2em; }
 .bid-list { margin: 0 0 0 1.1em; color: var(--ink-soft); }
 .bid-list li { margin-bottom: .4em; }
 .bid-data { display: grid; gap: 0; }
@@ -720,14 +772,14 @@ h1, h2, h3 { text-transform: none; }
   width: 100%;
   min-height: 46px;
   padding: 11px 13px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--field-line);
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink);
   transition: border-color calc(.14s * var(--motion)) var(--ease);
 }
 .bid-in::placeholder { color: var(--muted); }
-.bid-in:focus { border-color: var(--ink-soft); }
+.bid-in:focus { border-color: var(--ink); }
 .bid-in--tall { min-height: 120px; resize: vertical; }
 .bid-row--send { margin-top: 4px; }
 .bid-fine { font-size: .9rem; color: var(--ink-soft); }
@@ -765,7 +817,7 @@ h1, h2, h3 { text-transform: none; }
   min-width: 44px;
 }
 .sf-line:not(:has(a)) { padding-block: 6px; }
-@media (hover: hover) and (pointer: fine) { .sf-line a:hover { color: var(--accent); } }
+@media (hover: hover) and (pointer: fine) { .sf-line a:hover { color: var(--accent-text); } }
 .sf-jump ul { list-style: none; }
 .sf-jump li { margin-bottom: 0; }
 .sf-jump a {
@@ -776,7 +828,7 @@ h1, h2, h3 { text-transform: none; }
   min-height: 44px;
   min-width: 44px;
 }
-@media (hover: hover) and (pointer: fine) { .sf-jump a:hover { color: var(--accent); } }
+@media (hover: hover) and (pointer: fine) { .sf-jump a:hover { color: var(--accent-text); } }
 .sf-fine {
   max-width: var(--measure);
   margin-inline: auto;
@@ -888,7 +940,7 @@ h1, h2, h3 { text-transform: none; }
 }
 .ask-opt:active { transform: scale(.97); }
 @media (hover: hover) and (pointer: fine) {
-  .ask-opt:hover { border-color: var(--accent); color: var(--accent); }
+  .ask-opt:hover { border-color: var(--accent-text); color: var(--accent-text); }
 }
 .ask-opt--quiet { border-color: var(--line); color: var(--muted); }
 .ask-form {
@@ -905,13 +957,13 @@ h1, h2, h3 { text-transform: none; }
 .ask-input {
   min-height: 46px;
   padding: 11px 13px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--field-line);
   border-radius: var(--r-pill);
   background: var(--paper);
   color: var(--ink);
 }
 .ask-input::placeholder { color: var(--muted); }
-.ask-input:focus { border-color: var(--ink-soft); }
+.ask-input:focus { border-color: var(--ink); }
 .ask-send {
   min-height: 46px;
   padding: 11px 18px;
@@ -932,7 +984,7 @@ h1, h2, h3 { text-transform: none; }
 .ask-hint {
   position: fixed;
   top: calc(var(--tb-h, 88px) + 8px);
-  right: max(16px, calc((100vw - var(--measure)) / 2 + var(--gut)));
+  right: 16px;
   z-index: 29;
   display: flex;
   align-items: stretch;
@@ -964,8 +1016,9 @@ h1, h2, h3 { text-transform: none; }
 
 @media (min-width: 700px) {
   .ask-panel {
-    top: var(--tb-h, 88px);
-    right: max(16px, calc((100vw - var(--measure)) / 2 + var(--gut)));
+    position: absolute;      /* .ask is position:relative, so this IS the trigger */
+    top: calc(100% + 8px);
+    right: 0;
     bottom: auto;
     left: auto;
     width: 384px;

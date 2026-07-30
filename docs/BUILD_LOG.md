@@ -157,6 +157,64 @@ that reads as a document rather than a pitch. No waivers exist to echo here, bec
 |---|---|---|
 | 12 | **`worker/` was still template boilerplate**: 11 TODO markers, `PLACEHOLDER-domain.com` in the origin allowlist, `555-555-5555`, and a system prompt naming "BUSINESS NAME". No gate catches this, because `settled_check` only proves `wrangler.jsonc` exists. Since the settled tier is hybrid, `ship.py` would have deployed it, and the origin allowlist alone would have rejected every real request | Filled from the brief: real origins, real phone, the licence and bond record, all 12 scopes, the bid-package checklist, and a price deflection rewritten for bid work. The reusable HOW TO TALK / HARD RULES / SAFETY guardrails were kept verbatim. `wrangler.jsonc` named `jm-glass-chat` with the `chat.jmglassllc.com` route ready to uncomment at cutover |
 
+## Phase 6b, the Impeccable audit
+
+Run on Wyatt's instruction after the §12.8 composite. `context.mjs` reported
+`SCOPED_EXISTING_ALLOWED` (a narrow refinement command may treat the incumbent code as
+authority), so the audit proceeded without PRODUCT.md. **Impeccable's mechanical detector
+returned zero findings, twice.**
+
+Then four adversarial critics were told to REFUTE the favourable self-assessment, one per
+lens (a11y, performance, implementation integrity, content truth), at high effort, with
+permission to drive a real browser. **Three of four returned `refuted`, one
+`partially-refuted`, for 30 findings.** They were right, and several were things my own QA
+harness structurally could not see:
+
+| # | What they found | Verdict |
+|---|---|---|
+| 13 | **P0: twelve list-item disc markers rendering inside the scope grid.** `.glazing` is a `<ul>` and I never reset `list-style` | Real, and visible on a shipped page. My own QA screenshotted that page and I never opened the file |
+| 14 | **The mullion frame never closed on 20 of 22 project records.** My earlier per-cell border fix put the top and left rules on the container, so a row with 1 photo in a 4-column grid left them hanging | Real. Every rule now lives on the cell with a `-1px` margin collapse |
+| 15 | **`assets/og-image.jpg` did not exist.** Two critics found it independently. Every og:image, twitter:image and the JSON-LD image pointed at a 404, so every share previewed blank | Real. Generated 1200x630 from the hero frame with the reversed wordmark on a legible band |
+| 16 | **All 26 portrait `-sm` files declared `500w` but are 281px wide.** `SMALL` caps the LONG edge, so browsers upscaled them on plain desktop | Real, and I introduced it an hour earlier "fixing" performance. `make_assets.py` now returns the true width and `build.py` emits it |
+| 17 | **`sizes` switched at 900px while `.glazing` switches at 700px**, and every value described one column while the grid is 2-up from 0px. Measured 290KB wasted in one fold at 800px | Real. Five named constants now match the grid's own breakpoints and real column widths |
+| 18 | **Keyboard focus dropped to `<body>` at every wizard step** (WCAG 2.4.3), and `setInput(false)` disabled the input that held focus | Real. Focus now moves before the element is destroyed, and Close takes it before the input is disabled |
+| 19 | **Tab escaped the open assistant onto controls hidden behind it** (WCAG 2.2 SC 2.4.11) | Real. Tab is now contained while the panel is open |
+| 20 | **Form field borders measured 1.3:1**, far under the 3:1 a non-text UI component needs (1.4.11), in both themes | Real. New `--field-line` token. **My contrast check only measured text, never component boundaries** |
+| 21 | **Accent-as-text hover measured 3.5:1 in dark** (1.4.3) on five rules | Real. New `--accent-text` token, dark-only lift. **My contrast check only measured the resting state, never `:hover`** |
+| 22 | **`aria-pressed` never tracked the theme.** An OS-dark visitor got `aria-pressed="false"` on load and the first click changed nothing in the a11y tree (4.1.2) | Real. Derived from the live theme in `paint()` |
+| 23 | **`.filterbar` set `display:flex`, which beats the UA `[hidden]` rule**, so the no-JS guard did nothing | Real. `[hidden]` guard added |
+| 24 | **"What we self-perform" is not established anywhere.** `docs/research/own-site.md`: "Whether they self-perform install vs. subcontract ... not stated". A photograph proves a product is on their job, not who installed it | Real, and the worst finding of the set: exactly the unsourced-claim class this build was supposed to refuse. Reworded sitewide, including the chat answers and the Worker prompt |
+| 25 | **"Bonded and insured" in all four footers.** The bond is public; insurance is recorded UNVERIFIED | Real. Now "Bonded, no claim ever paid" |
+| 26 | **Two Life Time frames show no glazing at all**, under a heading claiming every photograph is our own | Real. Both demoted to unusable in the inventory. The project count is now DERIVED from the manifest, so it dropped to 21 by itself instead of drifting |
+| 27 | **Four scope notes asserted detail no photograph shows** ("swing stages", "between slabs", "large single-piece runs", "tied into the framing") | Real. All four trimmed to what the frame supports |
+| 28 | **British spellings in US copy**, including "Licence" for an Arizona ROC license, and headings reading "Aluminium" while their own alt text said "aluminum" | Real. Normalised; a parser-based sweep of rendered text now confirms zero |
+| 29 | **The sticky masthead was a fixed three-row grid: 178px, 21% of a 390x844 phone, permanently** | Real. Now 106px, 13%, and **tap-to-call stayed** (my first attempt dropped the phone to save 26px, which was the wrong trade for a trade contractor on a phone) |
+| 30 | **`?v=1` was a hand-written literal no build step ever bumped**, so the cache-bust mechanism was inert | Real. Now an 8-char content hash of each file |
+| 31 | Both masthead logos fetched eagerly at 1567px to render at 172px, one of them `display:none` | Real. A 344px mark per theme, ~4KB each |
+| 32 | No font preload, so the faces were discovered only after CSS parsed | Real. Both woff2 preloaded in `extra_head` |
+| 33 | The panel claimed in its own comment to anchor to its trigger but was positioned off the page gutter | Real. Now `position:absolute` inside `.ask` |
+| 34 | JSON-LD published `wyatt741@gmail.com` as the business email, which KICKOFF says is never displayed | Real. `engine.Site.email` is now the public address; a separate `FORM_INBOX` drives the FormSubmit action |
+| 35 | Dead CSS: `.sheet-in` matched nothing, two unreachable sibling selectors, a shadowed `display` | Real. Removed |
+
+Two of these were defects in my **QA harness**, not the site, and both are now fixed:
+`protocol_version` set on a `functools.partial` instead of the handler class (so the server
+silently served HTTP/1.0), and a focus check that flagged elements sitting inside a
+`display:none` ancestor as having no focus ring.
+
+**After the fixes:** `gate.py` green, Impeccable detector zero findings,
+`tools/visual_qa.py` **70 assertions 0 failures**, masthead 8-13% of viewport across
+360-1440px, zero horizontal overflow at every width tested, and a parser-based sweep of all
+rendered text clean of every banned string.
+
+Accepted and NOT fixed, with reasons:
+
+| Item | Why it stands |
+|---|---|
+| `prefers-reduced-motion` uses the engine's global `0.01ms` kill | Engine-provided base CSS, and nothing on this site communicates state by motion alone, so nothing is lost |
+| Portrait frames are cropped to 4:3 in the grid | Inherent to a uniform mullion grid. Mitigated with `object-position: 50% 38%`, since the subject of a glazing photograph sits above centre |
+| `ship.py` publishes `docs/`, so the competitor research would go live | **Template-level, flagged to Wyatt.** `SHIP_SET_DIRS` includes `docs/`, which would publish `competitors.md`, `gbp-reviews.md` and the raw research JSON to the live origin. Not changed here because it is engine behaviour affecting every site |
+| No metric-matched font fallback | Preloading both faces removes the reflow in practice; a full metric override is a template-level concern |
+
 ### Wyatt's §12.8 verdict
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

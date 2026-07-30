@@ -196,7 +196,13 @@ FOCUS_JS = """() => {
   const sel = 'a[href], button, input, textarea, select';
   const els = [...document.querySelectorAll(sel)].filter((el) => {
     const cs = getComputedStyle(el);
-    return cs.display !== 'none' && cs.visibility !== 'hidden' && !el.closest('[hidden]');
+    if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+    if (el.closest('[hidden]')) return false;
+    // an element inside a display:none ANCESTOR still reports its own display, so
+    // it passed the check above and then reported no focus ring. It is simply not
+    // rendered. offsetParent plus a real rect is the honest test.
+    const r = el.getBoundingClientRect();
+    return el.offsetParent !== null && r.width > 0 && r.height > 0;
   });
   // one probe per distinct tag+class signature. Focusing all 200-odd links on the
   // project sheet is redundant (they share a rule) and, with

@@ -23,6 +23,8 @@ INV = ROOT / "docs" / "research" / "asset-inventory.json"
 
 TILE = 1000     # max dimension for a gallery / scope frame
 HERO = 1800     # max dimension for the one hero frame
+SMALL = 500     # the phone-width variant. Without a second width the `sizes`
+                # attribute is inert and a 430px phone downloads the 1000px file.
 QUALITY = 82
 
 HERO_FILE = "storage-co-3.jpg"
@@ -68,18 +70,26 @@ def slug_for(filename, media_by_file, projects_by_id):
 
 
 def emit(name, out_name, cap):
+    """Write the full-width file plus a phone-width sibling (-sm.jpg), so the
+    markup can carry a real srcset. Returns the full-width size."""
     src = SRC / name
-    with Image.open(src) as im:
-        im = im.convert("RGB")
-        w, h = im.size
-        scale = min(1.0, cap / max(w, h))
-        size = (round(w * scale), round(h * scale))
-        if scale < 1.0:
-            im = im.resize(size, Image.LANCZOS)
-        WORK.mkdir(parents=True, exist_ok=True)
-        im.save(WORK / out_name, "JPEG", quality=QUALITY, optimize=True,
-                progressive=True)
-        return im.size
+    WORK.mkdir(parents=True, exist_ok=True)
+    with Image.open(src) as raw:
+        base = raw.convert("RGB")
+    sizes = {}
+    for target, suffix in ((cap, ""), (SMALL, "-sm")):
+        w, h = base.size
+        scale = min(1.0, target / max(w, h))
+        im = base.resize((round(w * scale), round(h * scale)), Image.LANCZOS) \
+            if scale < 1.0 else base.copy()
+        stem = out_name[:-4] if out_name.lower().endswith(".jpg") else out_name
+        im.save(WORK / f"{stem}{suffix}.jpg", "JPEG", quality=QUALITY,
+                optimize=True, progressive=True)
+        sizes[suffix] = im.size
+    # SMALL caps the LONG edge, so a portrait file is only ~281px WIDE. Advertising
+    # it as 500w made browsers upscale it on plain desktop, so the real width is
+    # recorded and build.py emits that.
+    return sizes[""], sizes["-sm"][0]
 
 
 def gc_marks():
@@ -98,6 +108,42 @@ def gc_marks():
         shutil.copy2(src, dest / src.name)
         n += 1
     print(f"gc marks: {n} copied to assets/gc/")
+
+
+def masthead_marks():
+    """The mark renders 172px wide. Shipping the 1567px original twice, eagerly,
+    on every page was ~51KB of waste for ~4KB of pixels."""
+    for src_name, out_name in (("logo.png", "logo-mark.png"),
+                               ("logo-reversed.png", "logo-mark-reversed.png")):
+        with Image.open(ROOT / "assets" / src_name) as im:
+            im = im.convert("RGBA")
+            scale = 344 / im.width          # 2x the 172px render box
+            small = im.resize((344, max(1, round(im.height * scale))), Image.LANCZOS)
+            small.save(ROOT / "assets" / out_name, optimize=True)
+            print(f"masthead mark: {out_name} {small.width}x{small.height} "
+                  f"({(ROOT / 'assets' / out_name).stat().st_size // 1024}KB)")
+
+
+def og_image():
+    """1200x630 share card. Without it every meta og:image and the JSON-LD image
+    key pointed at a file that does not exist, so every share previewed blank."""
+    base = Image.open(WORK / "storage-co-3.jpg").convert("RGB")
+    tw, th = 1200, 630
+    scale = max(tw / base.width, th / base.height)
+    im = base.resize((round(base.width * scale), round(base.height * scale)), Image.LANCZOS)
+    im = im.crop(((im.width - tw) // 2, (im.height - th) // 2,
+                  (im.width - tw) // 2 + tw, (im.height - th) // 2 + th))
+    # a legible band for the wordmark, so the card reads at Slack thumbnail size
+    band = Image.new("RGB", (tw, 132), (22, 25, 29))
+    im.paste(band, (0, th - 132))
+    mark = Image.open(ROOT / "assets" / "logo-reversed.png").convert("RGBA")
+    mscale = 420 / mark.width
+    mark = mark.resize((420, max(1, round(mark.height * mscale))), Image.LANCZOS)
+    im.paste(mark, (48, th - 132 + (132 - mark.height) // 2), mark)
+    im.save(ROOT / "assets" / "og-image.jpg", "JPEG", quality=86, optimize=True,
+            progressive=True)
+    print(f"og-image.jpg 1200x630 "
+          f"({(ROOT / 'assets' / 'og-image.jpg').stat().st_size // 1024}KB)")
 
 
 def favicons():
@@ -142,8 +188,8 @@ def main():
             continue                     # unattributed and not shortlisted
         out_name = name.replace("_", "-").lower()
         cap = HERO if name == HERO_FILE else TILE
-        w, h = emit(name, out_name, cap)
-        row = {"src": f"assets/work/{out_name}", "w": w, "h": h,
+        (w, h), sm_w = emit(name, out_name, cap)
+        row = {"src": f"assets/work/{out_name}", "w": w, "h": h, "sm": sm_w,
                "alt": p["alt"], "q": p["quality"], "o": p["orientation"]}
         rows.append(row)
         if slug:
@@ -152,8 +198,10 @@ def main():
             capability.append(row)
 
     # the team photo ships on its own, at tile size
-    tw, th = emit("TEAM-PHOTO-2023-scaled.jpg", "team-2023.jpg", TILE)
+    (tw, th), team_sm = emit("TEAM-PHOTO-2023-scaled.jpg", "team-2023.jpg", TILE)
     gc_marks()
+    masthead_marks()
+    og_image()
     favicons()
 
     print(f"\npublished {len(rows)} project frames + team photo into assets/work/")
@@ -168,7 +216,7 @@ def main():
             for s in PROJECTS
         ],
         "capability": capability,
-        "team": {"src": "assets/work/team-2023.jpg", "w": tw, "h": th},
+        "team": {"src": "assets/work/team-2023.jpg", "w": tw, "h": th, "sm": team_sm},
     }
     (ROOT / "assets" / "work" / "manifest.json").write_text(json.dumps(out, indent=1))
     print("wrote assets/work/manifest.json")

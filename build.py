@@ -23,6 +23,7 @@ Content rules that are not negotiable here (docs/SETTLED.md):
     no prequalification block, no leadership headshots
   - "licensed since 2015", never their own site's wrong "since 2016"
 """
+import hashlib
 import json
 import pathlib
 
@@ -31,7 +32,11 @@ import engine
 HERE = pathlib.Path(__file__).parent
 MANIFEST = json.loads((HERE / "assets" / "work" / "manifest.json").read_text())
 
-CSSV, JSV = 1, 1
+def _bust(name):
+    """Cache-bust from the file's own bytes. ?v=1 was a hand-written literal that no
+    build step ever bumped, so the one mechanism that exists to invalidate a cached
+    stylesheet was inert."""
+    return hashlib.sha256((HERE / name).read_bytes()).hexdigest()[:8]
 
 # ============================ CONFIG ============================
 # RAW text. Never HTML entities — the engine escapes for HTML and keeps the raw
@@ -44,25 +49,33 @@ SITE = engine.Site(
     addr="1502 N 29th Ave, Phoenix, AZ 85009",
     phone="623-243-5538",
     phone_tel="+16232435538",
-    # FormSubmit destination. Lowercase, and NOT the address shown on the page —
-    # it stays this way until the DNS migration (docs/SETTLED.md).
-    email="wyatt741@gmail.com",
+    # The PUBLIC address. engine.Site puts this straight into the LocalBusiness
+    # JSON-LD, and JSON-LD is display: KICKOFF says the FormSubmit inbox is never
+    # displayed, so it must not be this value.
+    email="jmglassllc@gmail.com",
     hours="Mon-Fri 6am-2pm",
     theme_color="#db1e22",
     # Empty on purpose. The type is self-hosted from assets/fonts via @font-face in
     # styles.css: gate.py refuses any remote stylesheet, because a sheet the linter
     # never sees can still win the cascade. Both families are OFL (LICENSES.md).
     fonts_href="",
-    css=f"styles.css?v={CSSV}",
-    js=f"app.js?v={JSV}",
+    css=f"styles.css?v={_bust('styles.css')}",
+    js=f"app.js?v={_bust('app.js')}",
     socials=("https://www.instagram.com/jmglassllc/",
              "https://www.facebook.com/Jmglassllc/"),
-    extra_head=('<link rel="icon" href="assets/favicon.ico" sizes="any">'
+    extra_head=('<link rel="preload" href="assets/fonts/archivo-narrow-latin.woff2" '
+                'as="font" type="font/woff2" crossorigin>'
+                '<link rel="preload" href="assets/fonts/archivo-latin.woff2" '
+                'as="font" type="font/woff2" crossorigin>'
+                '<link rel="icon" href="assets/favicon.ico" sizes="any">'
                 '<link rel="icon" href="assets/icon-512.png" type="image/png">'
                 '<link rel="apple-touch-icon" href="assets/icon-180.png">'),
 )
 
 DISPLAY_EMAIL = "jmglassllc@gmail.com"          # shown to visitors
+# FormSubmit destination. Lowercase, never rendered as text, never in JSON-LD.
+# Stays this way until the DNS migration (docs/SETTLED.md).
+FORM_INBOX = "wyatt741@gmail.com"
 MAPS = "https://maps.google.com/?q=1502+N+29th+Ave,+Phoenix,+AZ+85009"
 
 # ============================ CONTENT ============================
@@ -70,7 +83,7 @@ MAPS = "https://maps.google.com/?q=1502+N+29th+Ave,+Phoenix,+AZ+85009"
 # whole reason this block exists: their current site claims "fully licensed glass
 # experts" with no number, while ROC 302375 is real and public.
 RECORD = [
-    ("AZ ROC licence", "302375", "Specialty Dual CR-65, Glazing"),
+    ("AZ ROC license", "302375", "Specialty Dual CR-65, Glazing"),
     ("Status", "Active", "renewed through 2027-11-30"),
     ("First issued", "2015-11-09", "licensed in Arizona for over ten years"),
     ("Qualifying party", "William P Fain", "member and qualifying party"),
@@ -83,16 +96,16 @@ RECORD = [
 # the rule that let this list exist at all, since their current site describes the
 # entire offering in two words (research Part 2 §11).
 SCOPES = [
-    ("Aluminium storefront", "family-dollar-3.jpg",
+    ("Aluminum storefront", "family-dollar-3.jpg",
      "Framed storefront systems in clear or tinted insulated glass, set with "
      "entrance doors, sidelites and transoms."),
     ("Curtain wall", "cfc-4.jpg",
-     "Multi-storey aluminium curtain wall glazed with reflective insulated units, "
-     "set from lifts and swing stages."),
+     "Multi-story aluminum curtain wall glazed with reflective insulated units, "
+     "set from lifts."),
     ("Window wall", "chop-shop-4.jpg",
-     "Full-height gridded window wall between slabs, where the framing carries "
-     "the glass rather than the building skin."),
-    ("Aluminium entrances", "medical-3.jpg",
+     "Full-height gridded window wall, where the framing carries the glass "
+     "rather than the building skin."),
+    ("Aluminum entrances", "medical-3.jpg",
      "Narrow-stile and medium-stile door pairs with closers, panic hardware and "
      "matching sidelite framing."),
     ("Automatic sliding entrances", "family-dollar-4.jpg",
@@ -111,17 +124,20 @@ SCOPES = [
      "Sealed partition units with integral blinds, for interior spaces that need "
      "switchable privacy without a curtain."),
     ("Mirror", "ktnn-2.jpg",
-     "Wall mirror set and trimmed on site, including large single-piece runs in "
-     "finished interiors."),
+     "Wall mirror set and trimmed on site in finished interiors."),
     ("Glass guard and windbreak panels", "lake-3.jpg",
-     "Tempered panels set into steel or galvanised posts as guards and wind "
+     "Tempered panels set into steel or galvanized posts as guards and wind "
      "screens, including exterior dock work."),
     ("Sunshades over storefront", "bath-body-works-1.jpg",
-     "Metal sunshade and trellis assemblies mounted above the storefront line and "
-     "tied into the framing."),
+     "Metal sunshade and trellis assemblies over the storefront line."),
 ]
 
 CAPABILITY_CAPTION = "Commercial curtain wall installation"
+
+# Derived, never typed. The record only lists projects that HAVE a usable
+# photograph, and an audit caught the page claiming a count the record no longer
+# matched after two frames were dropped for showing no glazing at all.
+SHOWN_PROJECTS = sum(1 for p in MANIFEST["projects"] if p["photos"])
 
 # 23 GC and developer marks recovered from their own server. Rights confirmed by the
 # owner (docs/SETTLED.md). Their current site ships all 23 with EMPTY alt text; every
@@ -161,6 +177,15 @@ PAGE_TITLES = {
     "contact.html": "Bid invitations",
 }
 
+# `sizes` must describe the grid the photo actually lands in, and switch at the
+# grid's OWN 700px breakpoint, not 900px. The px values are the real column widths
+# once the 1280px measure stops growing (1184px of content split N ways).
+SZ_THREE = "(min-width:1376px) 394px, (min-width:700px) 31vw, 50vw"   # .glazing
+SZ_TWO = "(min-width:1376px) 592px, (min-width:700px) 46vw, 100vw"    # .glazing--two
+SZ_FOUR = "(min-width:1376px) 296px, (min-width:700px) 23vw, 50vw"    # .glazing--four
+SZ_SPLIT = "(min-width:1376px) 592px, (min-width:900px) 46vw, 100vw"  # page split
+SZ_HERO = "(min-width:1376px) 660px, (min-width:900px) 52vw, 100vw"
+
 BY_FILE = {p["src"].split("/")[-1]: p
            for proj in MANIFEST["projects"] for p in proj["photos"]}
 BY_FILE.update({p["src"].split("/")[-1]: p for p in MANIFEST["capability"]})
@@ -168,15 +193,23 @@ BY_FILE.update({p["src"].split("/")[-1]: p for p in MANIFEST["capability"]})
 
 # ============================ COMPONENTS ============================
 
-def plate(photo, *, eager=False, caption=None, sizes="(min-width:900px) 46vw, 100vw"):
+def plate(photo, *, eager=False, caption=None, sizes=SZ_TWO):
     """A photograph set flush into the grid, the way glass sets into a frame."""
     cap = f'<figcaption class="plate-cap">{caption}</figcaption>' if caption else ""
     loading = "eager" if eager else "lazy"
     priority = ' fetchpriority="high"' if eager else ""
+    # a real srcset, because `sizes` alone is inert: without a second candidate a
+    # 430px phone downloads the full-width file. tools/make_assets.py writes the
+    # -sm sibling at 500px.
+    stem = photo["src"][:-4]
+    # the REAL written width. SMALL caps the long edge, so a portrait -sm file is
+    # about 281px wide, and advertising it as 500w made browsers upscale it.
+    srcset = f'{stem}-sm.jpg {photo["sm"]}w, {photo["src"]} {photo["w"]}w'
     return (f'<figure class="plate">'
-            f'<img src="{photo["src"]}" alt="{photo["alt"]}" width="{photo["w"]}" '
-            f'height="{photo["h"]}" loading="{loading}"{priority} decoding="async" '
-            f'sizes="{sizes}">{cap}</figure>')
+            f'<img src="{photo["src"]}" srcset="{srcset}" sizes="{sizes}" '
+            f'alt="{photo["alt"]}" width="{photo["w"]}" '
+            f'height="{photo["h"]}" loading="{loading}"{priority} '
+            f'decoding="async">{cap}</figure>')
 
 
 def titleblock(here):
@@ -196,13 +229,13 @@ def titleblock(here):
     return f'''<header class="tblock">
   <div class="tblock-in">
     <a class="tblock-mark" href="index.html" aria-label="{SITE.biz}, home">
-      <img class="tb-logo" src="assets/logo.png" alt="{SITE.biz}" width="1567" height="187" loading="eager" decoding="async">
-      <img class="tb-logo tb-logo--rev" src="assets/logo-reversed.png" alt="{SITE.biz}" width="1567" height="187" loading="eager" decoding="async">
+      <img class="tb-logo" src="assets/logo-mark.png" alt="{SITE.biz}" width="344" height="41" loading="eager" decoding="async">
+      <img class="tb-logo tb-logo--rev" src="assets/logo-mark-reversed.png" alt="{SITE.biz}" width="344" height="41" loading="eager" decoding="async">
     </a>
     <dl class="tblock-data">
       <div class="tb-field"><dt class="tb-key">ROC</dt><dd class="tb-val">302375</dd></div>
       <div class="tb-field"><dt class="tb-key">Scope</dt><dd class="tb-val">Commercial only</dd></div>
-      <div class="tb-field"><dt class="tb-key">Call</dt><dd class="tb-val"><a href="tel:{SITE.phone_tel}">{SITE.phone}</a></dd></div>
+      <div class="tb-field tb-field--call"><dt class="tb-key">Call</dt><dd class="tb-val"><a href="tel:{SITE.phone_tel}">{SITE.phone}</a></dd></div>
     </dl>
     <nav class="jump" aria-label="Sheets">
       <ul class="jump-list">{links}</ul>
@@ -231,11 +264,11 @@ def sheetfoot():
       <p class="sf-line">{SITE.hours}</p>
     </div>
     <div class="sf-data">
-      <p class="sf-name">Licence</p>
+      <p class="sf-name">License</p>
       <p class="sf-line">AZ ROC 302375</p>
       <p class="sf-line">Specialty Dual CR-65, Glazing</p>
       <p class="sf-line">Active, first issued 2015-11-09</p>
-      <p class="sf-line">Bonded and insured</p>
+      <p class="sf-line">Bonded, no claim ever paid</p>
     </div>
     <nav class="sf-jump" aria-label="Sheets">
       <p class="sf-name">Sheets</p>
@@ -294,7 +327,7 @@ def home():
     # a mullion grid of six frames spanning building types, not one project
     preview = [BY_FILE[f] for f in ("johnny-was.jpg", "cfc-1.jpg", "esplanade-1.jpg",
                                     "medical-2.jpg", "chop-shop-1.jpg", "credit-union-3.jpg")]
-    tiles = "".join(f'<div class="lite">{plate(p, sizes="(min-width:900px) 31vw, 100vw")}</div>'
+    tiles = "".join(f'<div class="lite">{plate(p, sizes=SZ_THREE)}</div>'
                     for p in preview)
 
     marks = "".join(
@@ -315,18 +348,18 @@ def home():
         <a class="act act--quiet" href="scope.html">See the scope list</a>
       </p>
     </div>
-    <div class="opening-plate">{plate(hero, eager=True, sizes="(min-width:900px) 52vw, 100vw")}</div>
+    <div class="opening-plate">{plate(hero, eager=True, sizes=SZ_HERO)}</div>
   </section>
 
   <section class="stamp" aria-labelledby="stamp-h">
     <h2 class="stamp-h" id="stamp-h">The record, checkable</h2>
     <p class="stamp-lede">Every line below can be verified without asking us.
-      The licence is public at <a href="https://roc.az.gov/" target="_blank" rel="noopener">roc.az.gov</a>.</p>
+      The license is public at <a href="https://roc.az.gov/" target="_blank" rel="noopener">roc.az.gov</a>.</p>
     <dl class="stamp-grid">{record_rows}</dl>
   </section>
 
   <section class="scope" aria-labelledby="scope-h">
-    <h2 class="scope-h" id="scope-h">What we self-perform</h2>
+    <h2 class="scope-h" id="scope-h">The work we do</h2>
     <ul class="scope-list">{scope_rows}</ul>
     <p class="scope-more"><a class="act act--quiet" href="scope.html">Each scope, with the work behind it</a></p>
   </section>
@@ -334,7 +367,7 @@ def home():
   <section class="shots" aria-labelledby="shots-h">
     <h2 class="shots-h" id="shots-h">Work in Arizona</h2>
     <div class="glazing">{tiles}</div>
-    <p class="shots-more"><a class="act act--quiet" href="projects.html">All 22 projects</a></p>
+    <p class="shots-more"><a class="act act--quiet" href="projects.html">All {SHOWN_PROJECTS} projects</a></p>
   </section>
 
   <section class="gcs" aria-labelledby="gcs-h">
@@ -348,14 +381,15 @@ def home():
       <p>J&amp;M Glass was founded in 2015 by Mike Cook and Bill Fain, and has been a
         licensed Arizona glazing contractor since 9 November that year. Mike estimates,
         Bill runs the projects.</p>
-      <p>The crew self-performs the scopes on this site. Commercial work only, from
-        shell storefront and curtain wall through tenant improvement interiors.</p>
+      <p>The crew works every scope listed on this site. Commercial only, from shell
+        storefront and curtain wall through tenant improvement interiors.</p>
     </div>
     <div class="crew-plate">
       <figure class="plate">
-        <img src="{team["src"]}" alt="The J&amp;M Glass crew photographed together in 2023"
-             width="{team["w"]}" height="{team["h"]}" loading="lazy" decoding="async"
-             sizes="(min-width:900px) 46vw, 100vw">
+        <img src="{team["src"]}" srcset="assets/work/team-2023-sm.jpg {team["sm"]}w, {team["src"]} {team["w"]}w"
+             sizes="{SZ_SPLIT}"
+             alt="The J&amp;M Glass crew photographed together in 2023"
+             width="{team["w"]}" height="{team["h"]}" loading="lazy" decoding="async">
         <figcaption class="plate-cap">The crew, 2023</figcaption>
       </figure>
     </div>
@@ -382,7 +416,7 @@ def scope():
 <main id="main">
   <section class="pagehead">
     <h1 class="pagehead-h">Scope of work</h1>
-    <p class="pagehead-sub">Twelve scopes we self-perform. Each one is shown with a
+    <p class="pagehead-sub">Twelve commercial glazing scopes. Each one is shown with a
       photograph of the work, taken on our own jobs.</p>
   </section>
   <section class="scopesheet" aria-label="Scopes">
@@ -390,7 +424,7 @@ def scope():
   </section>
   <section class="askline">
     <h2 class="askline-h">Need a scope that is not listed?</h2>
-    <p class="askline-p">If it is commercial glass and aluminium, ask. We do not take
+    <p class="askline-p">If it is commercial glass and aluminum, ask. We do not take
       residential glass.</p>
     <p><a class="act" href="contact.html">Send a bid invitation</a></p>
   </section>
@@ -398,7 +432,7 @@ def scope():
 {sheetfoot()}'''
     return SITE.page(
         f"Scope of Work | {SITE.biz}",
-        "The twelve commercial glazing scopes J&M Glass self-performs, each shown "
+        "The twelve commercial glazing scopes J&M Glass works in, each shown "
         "with a photograph of the work: storefront, curtain wall, window wall, more.",
         "scope.html", body, body_class="sheet")
 
@@ -411,7 +445,7 @@ def projects():
         tags = "".join(f'<li class="record-tag">{t}</li>' for t in proj["types"])
         kinds = " ".join(t.lower().replace(" ", "-") for t in proj["types"])
         plates = "".join(
-            f'<div class="lite">{plate(p, sizes="(min-width:900px) 23vw, 50vw")}</div>'
+            f'<div class="lite">{plate(p, sizes=SZ_FOUR)}</div>'
             for p in proj["photos"])
         where = f'<p class="record-where">{proj["city"]}</p>' if proj["city"] else ""
         records += f'''<article class="record" data-kinds="{kinds}">
@@ -424,14 +458,14 @@ def projects():
     </article>'''
 
     caps = "".join(
-        f'<div class="lite">{plate(p, caption=CAPABILITY_CAPTION, sizes="(min-width:900px) 23vw, 50vw")}</div>'
+        f'<div class="lite">{plate(p, caption=CAPABILITY_CAPTION, sizes=SZ_FOUR)}</div>'
         for p in MANIFEST["capability"])
 
     body = f'''{titleblock("projects.html")}
 <main id="main">
   <section class="pagehead">
     <h1 class="pagehead-h">Project record</h1>
-    <p class="pagehead-sub">Twenty-two projects across Arizona, in two categories:
+    <p class="pagehead-sub">{SHOWN_PROJECTS} projects with photographs, in two categories:
       commercial shell and tenant improvement. Every photograph is our own.</p>
     <div class="filterbar" data-filterbar hidden>
       <span class="filterbar-lbl" id="filter-lbl">Show</span>
@@ -483,11 +517,11 @@ def contact():
         <div class="bid-field"><dt>Email</dt><dd><a href="mailto:{DISPLAY_EMAIL}">{DISPLAY_EMAIL}</a></dd></div>
         <div class="bid-field"><dt>Shop</dt><dd><a href="{MAPS}" target="_blank" rel="noopener">{SITE.addr}</a></dd></div>
         <div class="bid-field"><dt>Office hours</dt><dd>{SITE.hours}</dd></div>
-        <div class="bid-field"><dt>Licence</dt><dd>AZ ROC 302375, Specialty Dual CR-65</dd></div>
+        <div class="bid-field"><dt>License</dt><dd>AZ ROC 302375, Specialty Dual CR-65</dd></div>
       </dl>
     </div>
 
-    <form class="bid-form" action="https://formsubmit.co/{SITE.email}" method="POST">
+    <form class="bid-form" action="https://formsubmit.co/{FORM_INBOX}" method="POST">
       <h2 class="bid-h">Send an invitation</h2>
       <input type="hidden" name="_subject" value="Bid invitation from jmglassllc.com">
       <input type="hidden" name="_template" value="table">
@@ -523,7 +557,7 @@ def contact():
       <p class="bid-row bid-row--send">
         <button class="act" type="submit">Send invitation</button>
       </p>
-      <p class="bid-fine">Goes straight to the office. If it is urgent, call
+      <p class="bid-fine">If it is urgent, call
         <a href="tel:{SITE.phone_tel}">{SITE.phone}</a>.</p>
     </form>
   </section>

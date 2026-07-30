@@ -71,8 +71,13 @@
       const dark = window.site.theme() === 'dark';
       label.textContent = dark ? 'Light' : 'Dark';
       const btn = label.closest('[data-theme-toggle]');
-      if (btn) btn.setAttribute('aria-label', dark ? 'Switch to the light sheet'
-                                                  : 'Switch to the dark sheet');
+      if (btn) {
+        btn.setAttribute('aria-label', dark ? 'Switch to the light sheet'
+                                            : 'Switch to the dark sheet');
+        // the markup ships aria-pressed="false", which is a lie for an OS-dark
+        // visitor who has chosen nothing. Derive it from the live theme instead.
+        btn.setAttribute('aria-pressed', String(dark));
+      }
     };
     paint();
     document.documentElement.addEventListener('themechange', paint);
@@ -133,17 +138,17 @@
   const WORKER_URL = 'https://chat.jmglassllc.com';
   const AI_TIMEOUT = 6000;
 
-  const GREETING = 'Ask about scope, our licence, or send a bid invitation. '
+  const GREETING = 'Ask about scope, our license, or send a bid invitation. '
     + 'I can also take the invitation details here.';
 
   // Every answer below is a fact from docs/RESEARCH_BRIEF.md. No prices, ever:
   // commercial glazing is bid work and a quoted number would be fabricated.
   const ANSWERS = {
-    scope: 'We self-perform storefront, curtain wall, window wall, aluminium and '
+    scope: 'We do storefront, curtain wall, window wall, aluminum and '
       + 'all-glass entrances, automatic sliding entrances, frameless office fronts, '
       + 'sliding glass doors, blinds-between-glass partitions, mirror, glass guard '
       + 'panels and sunshades. The scope sheet shows a photograph of each one.',
-    licence: 'Arizona ROC 302375, Specialty Dual CR-65 Glazing. Active and renewed '
+    license: 'Arizona ROC 302375, Specialty Dual CR-65 Glazing. Active and renewed '
       + 'through 2027-11-30, first issued 9 November 2015. Bonded, no claim ever paid, '
       + 'and no ROC or BBB complaints. All of it is public at roc.az.gov.',
     residential: 'We take commercial work only. We do not do residential glass.',
@@ -152,7 +157,7 @@
     price: 'Commercial glazing is bid work, so there is no price list. Send the '
       + 'drawings and the bid date and we will tell you quickly whether we are '
       + 'bidding. Call ' + PHONE + ' if it is urgent.',
-    projects: 'The project record has 22 Arizona projects in two categories, '
+    projects: 'The project record has our Arizona projects in two categories, '
       + 'commercial shell and tenant improvement, with our own job photographs. '
       + 'Retail, medical, office, fitness, restaurant and travel centre.',
     contact: 'Call or text ' + PHONE + ', or email jmglassllc@gmail.com. I can also '
@@ -167,7 +172,7 @@
     const has = (words) => words.some((w) => q.indexOf(w) !== -1);
     if (has(['bid', 'invitation', 'invite', 'quote', 'estimate', 'itb', 'tender'])) return startWizard;
     if (has(['residential', 'house', 'home', 'shower', 'window at my', 'apartment'])) return ANSWERS.residential;
-    if (has(['licen', 'roc', 'bond', 'insur', 'complaint', 'certif'])) return ANSWERS.licence;
+    if (has(['licen', 'roc', 'bond', 'insur', 'complaint', 'certif'])) return ANSWERS.license;
     if (has(['price', 'cost', 'how much', 'pricing', 'rate', '$'])) return ANSWERS.price;
     if (has(['hour', 'open', 'where', 'location', 'address', 'directions', 'shop'])) return ANSWERS.hours;
     if (has(['project', 'portfolio', 'work', 'reference', 'past', 'experience'])) return ANSWERS.projects;
@@ -202,6 +207,11 @@
   };
   const toBottom = () => { log.scrollTop = log.scrollHeight; };
   const setInput = (on, ph) => {
+    // disabling the element that currently has focus drops activeElement to
+    // <body>. Hand focus to Close first, which stays reachable either way.
+    if (!on && (document.activeElement === input || document.activeElement === sendBtn)) {
+      shutBtn.focus({ preventScroll: true });
+    }
     input.disabled = !on;
     sendBtn.disabled = !on;
     input.placeholder = ph || 'Ask about scope or a bid';
@@ -257,11 +267,21 @@
     items.forEach((it) => {
       const b = el('button', 'ask-opt' + (it.quiet ? ' ask-opt--quiet' : ''), it.label);
       b.type = 'button';
-      b.addEventListener('click', () => { wrap.remove(); it.act(); });
+      // Removing the focused button sends activeElement to <body>, which loses a
+      // keyboard user's place at every wizard step (WCAG 2.4.3). Park focus on a
+      // stable anchor first; the next render then claims it.
+      b.addEventListener('click', () => {
+        const hadFocus = document.activeElement === b;
+        wrap.remove();
+        if (hadFocus) input.disabled ? shutBtn.focus() : input.focus();
+        it.act();
+      });
       wrap.appendChild(b);
     });
     log.appendChild(wrap);
     toBottom();
+    // a fresh set of choices takes focus, so Tab order follows the conversation
+    if (!panel.hidden && wrap.firstChild) wrap.firstChild.focus({ preventScroll: true });
     return wrap;
   }
   const transcript = () => convo.join('\n');
@@ -354,7 +374,26 @@
   openBtn.addEventListener('click', () => (panel.hidden ? open() : shut()));
   shutBtn.addEventListener('click', shut);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !panel.hidden) shut();
+    if (e.key === 'Escape' && !panel.hidden) { shut(); return; }
+    if (e.key !== 'Tab' || panel.hidden) return;
+    // The panel overlays page content that stays focusable behind it, so tabbing
+    // past Send used to land on controls the sheet completely hides (SC 2.4.11).
+    // Keep the loop inside the panel while it is open.
+    const stops = [...panel.querySelectorAll('button, input, textarea, a[href]')]
+      .filter((n) => !n.disabled && n.offsetParent !== null);
+    if (!stops.length) return;
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    if (!panel.contains(document.activeElement)) {
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    } else if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   });
   document.querySelectorAll('[data-open-ask]').forEach((t) => {
     t.addEventListener('click', (e) => { e.preventDefault(); open(); });
@@ -366,7 +405,7 @@
     options([
       { label: 'Send a bid invitation', act: startWizard },
       { label: 'What you self-perform', act: () => { say('me', 'What do you self-perform?'); botSay(ANSWERS.scope); } },
-      { label: 'Licence and bonding', act: () => { say('me', 'What is your licence?'); botSay(ANSWERS.licence); } },
+      { label: 'License and bonding', act: () => { say('me', 'What is your license?'); botSay(ANSWERS.license); } },
     ]);
     setInput(true, 'Or type your question');
   }

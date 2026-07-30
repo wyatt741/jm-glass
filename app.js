@@ -159,7 +159,7 @@
       + 'bidding. Call ' + PHONE + ' if it is urgent.',
     projects: 'The project record has our Arizona projects in two categories, '
       + 'commercial shell and tenant improvement, with our own job photographs. '
-      + 'Retail, medical, office, fitness, restaurant and travel centre.',
+      + 'Retail, medical, office, fitness, restaurant and travel center.',
     contact: 'Call or text ' + PHONE + ', or email jmglassllc@gmail.com. I can also '
       + 'take the bid details right here.',
     thanks: 'Anytime. Want me to take the bid details, or is there anything else?',
@@ -280,8 +280,13 @@
     });
     log.appendChild(wrap);
     toBottom();
-    // a fresh set of choices takes focus, so Tab order follows the conversation
-    if (!panel.hidden && wrap.firstChild) wrap.firstChild.focus({ preventScroll: true });
+    // A fresh set of choices takes focus so Tab order follows the conversation,
+    // but ONLY when the visitor is not mid-sentence. Grabbing focus out of an
+    // enabled input is a steal, and the follow-up offer renders while they type.
+    const typing = document.activeElement === input && !input.disabled;
+    if (!panel.hidden && wrap.firstChild && !typing) {
+      wrap.firstChild.focus({ preventScroll: true });
+    }
     return wrap;
   }
   const transcript = () => convo.join('\n');
@@ -395,6 +400,15 @@
       first.focus();
     }
   });
+  // Clicking the sheet behind an open panel used to leave focus on <body> with
+  // the Tab loop still armed, so the page was keyboard-unreachable until Escape.
+  // Closing on an outside press keeps the panel non-modal and honest.
+  document.addEventListener('pointerdown', (e) => {
+    if (panel.hidden) return;
+    if (panel.contains(e.target) || openBtn.contains(e.target)) return;
+    shut();
+  });
+
   document.querySelectorAll('[data-open-ask]').forEach((t) => {
     t.addEventListener('click', (e) => { e.preventDefault(); open(); });
   });
@@ -404,7 +418,7 @@
     say('bot', GREETING);
     options([
       { label: 'Send a bid invitation', act: startWizard },
-      { label: 'What you self-perform', act: () => { say('me', 'What do you self-perform?'); botSay(ANSWERS.scope); } },
+      { label: 'The work you do', act: () => { say('me', 'What work do you do?'); botSay(ANSWERS.scope); } },
       { label: 'License and bonding', act: () => { say('me', 'What is your license?'); botSay(ANSWERS.license); } },
     ]);
     setInput(true, 'Or type your question');

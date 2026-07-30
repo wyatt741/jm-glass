@@ -467,7 +467,9 @@ h1, h2, h3 { text-transform: none; }
 .act--quiet {
   background: transparent;
   color: var(--ink);
-  border-color: var(--line);
+  /* the border is the only thing marking this as a control, so it needs the 3:1
+     of a non-text UI component (1.4.11), exactly as the inputs do */
+  border-color: var(--field-line);
 }
 @media (hover: hover) and (pointer: fine) {
   .act--quiet:hover { background: transparent; color: var(--accent-text); border-color: var(--accent-text); }
@@ -549,6 +551,9 @@ h1, h2, h3 { text-transform: none; }
   display: grid;
   gap: 0;
   list-style: none;          /* it is a <ul> on the scope sheet: reset the markers */
+  /* cancels the cells' -1px collapse for the first row and column, so the photo
+     frame lines up with the type column instead of sitting 1px outside it */
+  padding: 1px 0 0 1px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .glazing--two { grid-template-columns: minmax(0, 1fr); }
@@ -694,6 +699,7 @@ h1, h2, h3 { text-transform: none; }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 0;
+  padding: 1px 0 0 1px;      /* same collapse cancellation as .glazing */
   margin-top: 1.5em;
 }
 .gc {
@@ -870,7 +876,7 @@ h1, h2, h3 { text-transform: none; }
 .ask-shut {
   min-height: 44px;
   padding: 8px 12px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--field-line);
   border-radius: var(--r-pill);
   background: transparent;
   cursor: pointer;
@@ -942,7 +948,7 @@ h1, h2, h3 { text-transform: none; }
 @media (hover: hover) and (pointer: fine) {
   .ask-opt:hover { border-color: var(--accent-text); color: var(--accent-text); }
 }
-.ask-opt--quiet { border-color: var(--line); color: var(--muted); }
+.ask-opt--quiet { border-color: var(--field-line); color: var(--ink-soft); }
 .ask-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1024,7 +1030,6 @@ h1, h2, h3 { text-transform: none; }
     width: 384px;
     max-height: min(620px, calc(100vh - var(--tb-h, 88px) - 24px));
     border: 2px solid var(--ink);
-    border-top-width: 0;
   }
 }
 /* freeze the sheet behind the panel on phones, or scrolling the assistant

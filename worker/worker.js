@@ -44,7 +44,7 @@ const SYSTEM = `You are the website assistant for J&M Glass LLC, a commercial gl
 === WHAT WE DO ===
 Twelve scopes, each shown on the scope sheet with a photograph of our own work:
 - Aluminum storefront: framed systems in clear or tinted insulated glass, with entrance doors, sidelites and transoms.
-- Curtain wall: multi-story aluminum curtain wall glazed with reflective insulated units, set from lifts and swing stages.
+- Curtain wall: multi-story aluminum curtain wall glazed with reflective insulated units, set from lifts.
 - Window wall: full-height gridded window wall between slabs.
 - Aluminum entrances: narrow-stile and medium-stile door pairs with closers and panic hardware.
 - Automatic sliding entrances: sliding assemblies with transoms, set into the storefront line.
@@ -52,7 +52,7 @@ Twelve scopes, each shown on the scope sheet with a photograph of our own work:
 - Sliding glass doors: top-hung, on exposed stainless barn track.
 - All-glass doors: tempered pairs on pivot hardware with patch fittings.
 - Blinds-between-glass: sealed partition units with integral blinds.
-- Mirror: wall mirror set and trimmed on site, including large single-piece runs.
+- Mirror: wall mirror set and trimmed on site.
 - Glass guard and windbreak panels: tempered panels in steel or galvanized posts, including exterior dock work.
 - Sunshades over storefront: metal sunshade and trellis assemblies tied into the framing.
 

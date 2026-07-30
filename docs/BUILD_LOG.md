@@ -215,6 +215,37 @@ Accepted and NOT fixed, with reasons:
 | `ship.py` publishes `docs/`, so the competitor research would go live | **Template-level, flagged to Wyatt.** `SHIP_SET_DIRS` includes `docs/`, which would publish `competitors.md`, `gbp-reviews.md` and the raw research JSON to the live origin. Not changed here because it is engine behaviour affecting every site |
 | No metric-matched font fallback | Preloading both faces removes the reflow in practice; a full metric override is a template-level concern |
 
+### Round 2, the re-verification
+
+Three verifiers re-checked all 23 fixes at high effort with a real browser, and confirmed
+**every one as `fixed`** with pixel-level evidence (border runs measured in CSS px, contrast
+recomputed per theme, focus walked with 14 forward and 14 reverse Tabs, the no-JS case run
+with `javaScriptEnabled=False`). They also caught what round 1 missed:
+
+| # | Found | Note |
+|---|---|---|
+| 36 | `app.js` still shipped the chat chip **"What you self-perform"** and asked "What do you self-perform?" | The round-1 sweep only checked rendered HTML. JS-authored copy is never inspected by any gate |
+| 37 | The projects **meta and og:description still said "Twenty-two"** while the visible copy said the derived 21 | Deriving the visible count left the share card behind. Now derived too |
+| 38 | **"travel centre"** survived in a chat answer | Same blind spot as 36 |
+| 39 | `SZ_HERO` over-declared by 11% at 1440 and ignored the 32px gutters at 768 | Now measured exact: declared 592px renders 592px, declared `calc(100vw - 64px)` renders 704px at 768 |
+| 40 | **My focus fix stole focus while the visitor was typing.** The follow-up offer renders mid-sentence and grabbed the caret out of the input | Regression from fix 18. Now gated on whether the input holds focus |
+| 41 | **My Tab trap armed in a non-modal dialog.** Clicking the page left focus on `<body>` with the loop still live, so the sheet behind was keyboard-unreachable until Escape | Regression from fix 19. An outside press now closes the panel |
+| 42 | **The panel covered the masthead rule and had no top edge**, measured as a 380px gap in a previously continuous rule | Regression from fix 33. Top border restored |
+| 43 | **The photo grid sat 1px left of the type column** at every breakpoint, because the -1px collapse also applied to the first row and column | Regression from fix 14. Cancelled with a 1px pad; measured aligned at x=128 and x=32 |
+| 44 | Quiet button borders were still `--line` at **1.31:1** while the same argument had raised the inputs | Pre-existing, and the outline is the only thing marking those as controls. Now `--field-line` |
+| 45 | `worker.js` still carried **"swing stages"** and **"large single-piece runs"** after `build.py` dropped both | The Worker prompt is a third copy of the scope list and was missed |
+
+Fixed all ten. Final state: `gate.py` green, Impeccable detector **zero findings on a third
+run**, `tools/visual_qa.py` **70 assertions 0 failures**, project count 21 in the visible
+copy, the meta description, the share card and the rendered record count alike, and a
+string sweep of both JS files clean.
+
+**A template gap worth carrying upstream**, raised by the verifier and confirmed: all four
+gates exit 0 while two of these defects were live, because `test_content.py` inspects
+generated HTML only. Copy that ships inside `app.js` or `worker/worker.js` is never checked
+for fabrication, dashes, or overclaims, and this site has three separate copies of the scope
+list. Two of the three were wrong at once.
+
 ### Wyatt's §12.8 verdict
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

@@ -184,7 +184,7 @@ SZ_THREE = "(min-width:1376px) 394px, (min-width:700px) 31vw, 50vw"   # .glazing
 SZ_TWO = "(min-width:1376px) 592px, (min-width:700px) 46vw, 100vw"    # .glazing--two
 SZ_FOUR = "(min-width:1376px) 296px, (min-width:700px) 23vw, 50vw"    # .glazing--four
 SZ_SPLIT = "(min-width:1376px) 592px, (min-width:900px) 46vw, 100vw"  # page split
-SZ_HERO = "(min-width:1376px) 660px, (min-width:900px) 52vw, 100vw"
+SZ_HERO = "(min-width:1376px) 592px, (min-width:900px) 50vw, calc(100vw - 64px)"
 
 BY_FILE = {p["src"].split("/")[-1]: p
            for proj in MANIFEST["projects"] for p in proj["photos"]}
@@ -487,7 +487,7 @@ def projects():
 {sheetfoot()}'''
     return SITE.page(
         f"Project Record | {SITE.biz}",
-        "Twenty-two commercial glazing projects across Arizona by J&M Glass, shown "
+        f"{SHOWN_PROJECTS} commercial glazing projects in Arizona by J&M Glass, shown "
         "with our own job-site photographs. Commercial shell and tenant improvement.",
         "projects.html", body, body_class="sheet")
 

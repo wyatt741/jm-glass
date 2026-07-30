@@ -206,10 +206,21 @@ def stage_paths():
 
 # ---- §12.8 verdict (ruling 5) ----------------------------------------------
 
-def verdict_check():
+def verdict_check(preview=False):
     """Wyatt's §12.8 accept/reject — the one human checkpoint before a FULLY
     AUTO ship — must be an explicit ACCEPT, with the side-by-side composite
-    evidence it was recorded against."""
+    evidence it was recorded against.
+
+    NOT required for a PREVIEW ship (Wyatt, 2026-07-30). The verdict exists to
+    protect the CLIENT'S public face, and a preview is noindex, on a URL that is
+    not the client's domain, and exists precisely so humans can look at the thing
+    before judging it. Gating the preview on the judgement was backwards: it made
+    the artifact you need in order to decide unreachable until you had decided.
+    Every mechanical gate still applies to a preview; only the human call defers."""
+    if preview:
+        ok("§12.8 verdict not required for a PREVIEW ship — it gates the LIVE "
+           "ship to the client's own domain, where the public face is at stake")
+        return None
     log = ROOT / "docs" / "BUILD_LOG.md"
     verdict = None
     if not log.exists():
@@ -540,7 +551,13 @@ def build_plan(info, hash_line, stamp_line):
     plan.append(("git push -u origin main (the pre-push guard re-verifies .gate/HASH)",
                  lambda: run(["git", "push", "-u", "origin", "main"])))
 
-    if tier == "hybrid":
+    if tier == "hybrid" and not domain and info.get("preview"):
+        plan.append(("no worker deploy — PREVIEW ship. The widget points at "
+                     "chat.<domain>, which does not resolve until the DNS cutover, so "
+                     "deploying now would leave an orphan Worker on a workers.dev URL "
+                     "that PLAYBOOK §6 forbids serving the bot from. The canned "
+                     "answers carry the preview.", None))
+    elif tier == "hybrid":
         plan.append(("wrangler deploy (cwd worker/ — settled chatbot tier is hybrid)",
                      lambda: run(["wrangler", "deploy"], cwd=ROOT / "worker")))
     else:
@@ -572,8 +589,11 @@ def main():
     install_hook()
     stamp_check()      # the tree HMAC (rulings 1-3)
     ship_set_check()   # no strays, no `git add -A` (ruling 7)
-    verdict_check()    # §12.8 explicit ACCEPT + composite evidence (ruling 5)
+    # SETTLED first, because whether this is a preview decides whether the §12.8
+    # human verdict is required at all.
     info = settled_check()  # domain/repo fail-closed + CNAME pinning (ruling 6)
+    is_preview = bool(info.get("preview")) and not info.get("domain")
+    verdict_check(preview=is_preview)  # §12.8 ACCEPT + composite, live ships only
     publish_scope_check()   # the domain must not serve the working papers
 
     lines = HASH_FILE.read_text().splitlines() if HASH_FILE.exists() else []

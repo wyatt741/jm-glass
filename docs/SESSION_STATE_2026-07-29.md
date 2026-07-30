@@ -1,10 +1,12 @@
 # jm-glass — Session State (2026-07-29)
 
-**Started / Last Updated:** 2026-07-29 ~19:00 PDT to 23:45 PDT (the session crossed into
-2026-07-30 UTC, so gate stamps and a few in-repo notes carry the UTC date; local dates are PDT)
+**Started / Last Updated:** 2026-07-29 ~19:00 PDT, last updated 2026-07-30 00:15 PDT. One
+continuous session that rolled past midnight, so this doc covers both dates; gate stamps carry
+UTC. Updated in place rather than split, because it is one session.
 **Project:** `/Users/Wyatt/Documents/Claude/jm-glass`
-**Topic:** Full rebuild of the J&M Glass LLC site with the new site-v2 runner. Phases 0-6
-complete, configured for a client PREVIEW ship, blocked only on Wyatt's §12.8 verdict.
+**Topic:** Full rebuild of the J&M Glass LLC site with the new site-v2 runner. Phases 0-7
+complete. **SHIPPED as a client preview and verified live at
+https://wyatt741.github.io/jm-glass/.**
 
 ## What We Are Building / Doing
 
@@ -27,6 +29,49 @@ The site's job, from the research: it is a **bid document for general contractor
 not a marketing funnel. The measured need is to survive the ten seconds between a GC pulling
 J&M off a bid list and deciding whether to send a bid invitation. Four pages: `index.html`,
 `scope.html`, `projects.html`, `contact.html`.
+
+## SHIPPED (added 2026-07-30)
+
+**Live: https://wyatt741.github.io/jm-glass/** — noindex, `robots.txt Disallow: /`, no CNAME,
+not the client's domain. Repo `wyatt741/jm-glass` created **public** (Pages requires it).
+Pages build matches HEAD (`04175d0`).
+
+**Wyatt changed the rule mid-session** rather than have me transcribe his judgement:
+*"the site template should auto accept and produce the preview. i shouldnt be stopping you
+telling you to do so."* He was right, and the old rule was backwards: the §12.8 judgement
+protects the client's public face, but a noindex preview on a URL that is not theirs is how a
+human gets to LOOK at the site in order to judge it, so gating the preview on the verdict made
+the deciding artifact unreachable. `ship.py` + `preflight.py` now defer **both** the §12.8
+ACCEPT and the Worker deploy to the LIVE ship (template `1c1a410`). Every mechanical gate still
+runs on a preview. **The verdict was never written and is still `PENDING`.**
+
+Verified live rather than assumed:
+
+| Must serve | Must NOT serve |
+|---|---|
+| `/`, `/scope.html`, `/projects.html`, `/contact.html` = 200 | `/docs/research/competitors.md` = 404 |
+| `styles.css`, `app.js`, `og-image.jpg`, the woff2 = 200 | `/docs/RESEARCH_BRIEF.md` = 404 |
+| canonicals point at the preview base, never jmglassllc.com | `/tools/serve.py`, `/CLAUDE.md`, `/Backups/` = 404 |
+| `noindex,nofollow` + `Disallow: /` served for real | `/build.py`, `/assets/src/media.json` = 404 |
+
+Also rendered in a browser at 1440 to confirm it looks like what was built, not merely that it
+responds.
+
+**Two more template gaps the ship itself exposed**, both found by a gate refusing me:
+
+- **`CLAUDE.md` was not in `ship.py`'s ship set**, so editing the file RUN.md phase 7 *mandates
+  writing* made the ship reject it as a stray. Added it plus `LICENSES.md`, `KICKOFF.md` and
+  `tools/`.
+- **The pre-push guard blocked a manual `git push`** after I edited the build log post-stamp.
+  Correct behaviour; I re-stamped and went back through `ship.py` instead of working around it.
+
+**`registry.py add .` ran.** jm-glass is the **6th** registry entry (131 classes), so the next
+site is gated against its vocabulary too.
+
+**The Worker was deliberately NOT deployed.** The widget's `WORKER_URL` is
+`chat.jmglassllc.com`, which does not resolve until the cutover, so deploying now would leave
+an orphan Worker on a `workers.dev` URL that PLAYBOOK §6 forbids serving the bot from. The
+canned answers carry the preview.
 
 ## What WORKED (with evidence)
 
@@ -111,7 +156,7 @@ J&M off a bid list and deciding whether to send a bid invitation. Four pages: `i
 
 ## What Has NOT Been Tried Yet
 
-- **The actual ship.** `ship.py` has never run for real here. Only `--dry-run`.
+- ~~The actual ship~~ — **DONE 2026-07-30**, preview tier. The LIVE cutover ship has not run.
 - **The FormSubmit activation.** The first real submission triggers a one-time activation
   email to `wyatt741@gmail.com` that must be clicked, or mail silently drops.
 - **The Cloudflare Worker has never been deployed.** `worker/worker.js` now carries the real
@@ -119,8 +164,7 @@ J&M off a bid list and deciding whether to send a bid invitation. Four pages: `i
   `wrangler secret put ANTHROPIC_API_KEY`, a spend cap in the Anthropic console, and DNS on
   Cloudflare for `chat.jmglassllc.com`. Until then the widget's canned answers serve every
   message (designed fallback, with a 6s abort so it is quick).
-- **`registry.py add .` has never run.** The registry is still the five pre-runner sites, so
-  jm-glass's own vocabulary is not yet prior art for the next site.
+- ~~`registry.py add .` has never run~~ — **DONE**, jm-glass is the 6th entry (131 classes).
 - **No Higgsfield or generated imagery.** Deliberate: 52 real photographs of their own work
   exist. The §9a prompt is recorded in `docs/DESIGN_READ.md` but nothing was generated.
 - **Nobody has opened the site in a real non-headless browser at a real desktop.** All visual
@@ -147,7 +191,7 @@ J&M off a bid list and deciding whether to send a bid invitation. Four pages: `i
 | `tools/*.py` | Complete | make_assets, make_logo, visual_qa, capture_peers, serve |
 | `CNAME` | **Deliberately absent** | Cutover-time artifact only |
 | `.gate/HASH` | Green | Stamped over 304 files |
-| Remote | **None** | 0 remotes. Nothing has ever been pushed |
+| Remote | `origin` | `github.com/wyatt741/jm-glass`, **public**, Pages on `main`/root |
 
 ## Commits Made This Session
 
@@ -249,10 +293,13 @@ ran clean. Nothing else in `~/.claude` was edited by hand.
 
 ## Blockers & Open Questions
 
-- **BLOCKING: the `§12.8` verdict.** `docs/BUILD_LOG.md`'s row says `PENDING`. `ship.py`
-  refuses on this and nothing else. Only Wyatt may write it; I verified the gate refuses
-  rather than letting me self-approve.
-- **J&M have not seen the site.** The preview ship exists to get them a URL.
+- **The `§12.8` verdict is still `PENDING`** and now gates the **LIVE** ship only. It must be
+  written before the cutover. Only Wyatt may write it.
+- **J&M have not seen the site yet.** The preview URL exists to be sent to them.
+- **The repo is public and the client can browse it.** The research is purged, but
+  `docs/BUILD_LOG.md` and `docs/SETTLED.md` remain readable and record decisions like cutting
+  reviews and correcting their "since 2016" claim. Professional, but worth a look before
+  sharing the link.
 - **DNS has not moved** and is Wyatt's to change at their registrar.
 - **FormSubmit activation** click, on the first real submission.
 - **Anthropic key + spend cap** before the Worker answers anything.
@@ -284,16 +331,19 @@ python3 tools/serve.py 8412     # preview at http://127.0.0.1:8412 (HTTP/1.1 + t
 
 ## Exact Next Step
 
-Open `docs/BUILD_LOG.md`, find the row containing `§12.8`, and replace the word `PENDING`
-with `ACCEPT` (or `REJECT`). Then:
+**Send J&M https://wyatt741.github.io/jm-glass/ and wait for their reaction.** Nothing in the
+repo is blocked.
 
-```bash
-cd ~/Documents/Claude/jm-glass && python3 gate.py --ship && python3 ship.py
-```
+When they approve, the LIVE cutover is one motion (all of it, together, per the standing rule):
 
-That publishes the **preview** to `https://wyatt741.github.io/jm-glass/` (noindex, no CNAME,
-not their domain) so J&M can be sent a URL. The live cutover is a separate later motion,
-documented in `CLAUDE.md` under "Step 2".
+1. `docs/BUILD_LOG.md`: replace `PENDING` with `ACCEPT` on the `§12.8` row.
+2. `docs/SETTLED.md`: `- domain: jmglassllc.com`, delete the `- preview:` line.
+3. `build.py`: `domain="jmglassllc.com"`, `preview=False` (switch is commented at the top).
+4. `printf 'jmglassllc.com\n' > CNAME`
+5. Move jmglassllc.com's DNS to GitHub Pages, or Cloudflare if you want the Worker on
+   `chat.jmglassllc.com`.
+6. `python3 gate.py --ship && python3 ship.py` — this is when the Worker deploys, so the
+   Anthropic key and spend cap must exist first.
 
 ## Resume Prompt
 

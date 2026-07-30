@@ -10,3 +10,6 @@ docs/qa/*
 # never in the repo, because Pages needs a public repo and the client gets that URL
 docs/research/
 docs/RESEARCH_BRIEF.md
+
+# browser MCP debug output, swept in once by a git add -A
+.playwright-mcp/

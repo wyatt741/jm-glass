@@ -1,7 +1,7 @@
 {
   // Cloudflare Worker config for the site chat proxy.
   // The Anthropic key is NOT here - it's a secret: `wrangler secret put ANTHROPIC_API_KEY`
-  "name": "SITE-chat",                 // TODO: rename, e.g. "acme-chat"
+  "name": "jm-glass-chat",
   "main": "worker.js",
   "compatibility_date": "2026-07-24",
   "observability": { "enabled": true, "head_sampling_rate": 1 },
@@ -25,6 +25,6 @@
   // domain. Uncomment and fill in your domain:
   //
   // ,"routes": [
-  //   { "pattern": "chat.PLACEHOLDER-domain.com", "custom_domain": true }
+  //   { "pattern": "chat.jmglassllc.com", "custom_domain": true }
   // ]
 }

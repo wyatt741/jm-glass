@@ -151,6 +151,12 @@ one, the only square one, the only one whose accent is not blue or pink, and the
 that reads as a document rather than a pitch. No waivers exist to echo here, because
 `docs/WAIVERS.md` was never needed.
 
+### Post-QA fix, found while reporting
+
+| # | Defect | Fix |
+|---|---|---|
+| 12 | **`worker/` was still template boilerplate**: 11 TODO markers, `PLACEHOLDER-domain.com` in the origin allowlist, `555-555-5555`, and a system prompt naming "BUSINESS NAME". No gate catches this, because `settled_check` only proves `wrangler.jsonc` exists. Since the settled tier is hybrid, `ship.py` would have deployed it, and the origin allowlist alone would have rejected every real request | Filled from the brief: real origins, real phone, the licence and bond record, all 12 scopes, the bid-package checklist, and a price deflection rewritten for bid work. The reusable HOW TO TALK / HARD RULES / SAFETY guardrails were kept verbatim. `wrangler.jsonc` named `jm-glass-chat` with the `chat.jmglassllc.com` route ready to uncomment at cutover |
+
 ### Wyatt's §12.8 verdict
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

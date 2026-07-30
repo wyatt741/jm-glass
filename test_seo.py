@@ -30,6 +30,23 @@ def attr(html, pattern):
 if not PAGES:
     sys.exit("no generated .html found — run python3 build.py first")
 
+# The canonical BASE, read off the home page rather than assumed. The old rule
+# counted slashes and demanded exactly two, which is only true for an apex domain
+# and refused a Pages project URL like https://user.github.io/site/ — the very
+# thing a pre-cutover client preview needs. Deriving the base instead checks the
+# real invariant: home is the base, every other page hangs directly off it.
+_home = HERE / "index.html"
+BASE = None
+HOME_CANON = None
+if _home.exists():
+    m = re.search(r'<link rel="canonical" href="(.*?)"', _home.read_text(encoding="utf-8"))
+    if m:
+        HOME_CANON = m.group(1)
+        # A home canonical pointing at /index.html would otherwise become the base
+        # and cascade a confusing failure onto every other page, so strip it here
+        # and report the real fault once, below.
+        BASE = re.sub(r"/index\.html/?$", "", HOME_CANON).rstrip("/")
+
 for path in PAGES:
     n, h = path.name, path.read_text(encoding="utf-8")
 
@@ -56,11 +73,19 @@ for path in PAGES:
     canon = attr(h, r'<link rel="canonical" href="(.*?)"')
     if not canon:
         bad(n, "no canonical link")
-    elif n == "index.html" and not canon.rstrip("/").count("/") == 2:
-        # home must canonicalise to the bare origin, or "/" and "/index.html" split
-        bad(n, f"home canonical should be the bare root, got {canon}")
-    elif n != "index.html" and not canon.endswith(n):
-        bad(n, f"canonical {canon} does not match the page ({n})")
+    elif BASE is None:
+        bad(n, "index.html carries no canonical, so there is no base to check against")
+    elif n == "index.html":
+        # home canonicalises to the base itself with a trailing slash, never to
+        # /index.html, or "/" and "/index.html" split into two URLs
+        if re.search(r"/index\.html/?$", canon):
+            bad(n, f"home canonical points at /index.html, which splits the homepage "
+                   f"into two URLs; it should be {BASE}/ — got {canon}")
+        elif canon.rstrip("/") != BASE or not canon.endswith("/"):
+            bad(n, f"home canonical should be the site base with a trailing slash "
+                   f"({BASE}/), got {canon}")
+    elif canon != f"{BASE}/{n}":
+        bad(n, f"canonical {canon} is not {BASE}/{n}")
 
     h1s = re.findall(r"<h1[\s>]", h)
     if len(h1s) != 1:
@@ -119,7 +144,10 @@ else:
         fails.append("sitemap.xml lists no URLs")
     for path in PAGES:
         want = path.name
-        listed = any(l.endswith(want) or (want == "index.html" and l.rstrip("/").count("/") == 2)
+        # home appears as the base with a trailing slash, not as /index.html. Compare
+        # against the derived BASE so a Pages project URL works the same as an apex.
+        listed = any(l.endswith(want)
+                     or (want == "index.html" and BASE and l.rstrip("/") == BASE)
                      for l in locs)
         if not listed:
             fails.append(f"sitemap.xml does not list {want}")

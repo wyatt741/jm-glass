@@ -3,7 +3,8 @@
 The grill (RUN.md phase 2). Answers below freeze the work list. The four contract lines come
 first, before any prose, because `ship.py: parse_settled()` takes the first match per field.
 
-- domain: jmglassllc.com
+- domain: none
+- preview: https://wyatt741.github.io/jm-glass/
 - repo: jm-glass
 - chatbot: hybrid
 - rights: project photos cleared, 2023 team photo cleared, GC partner logos cleared by owner instruction; the four leadership headshots are NOT cleared and do not ship
@@ -57,7 +58,22 @@ Carried from the brief so the authoring phase cannot forget:
 - `cfc_1-5` are the best curtain-wall photographs on their server and belong to no project page.
   They ship as capability photographs with generic captions, never captioned as a named project.
 
-## Hosting note — CNAME is deliberately absent this run
+## Hosting note — shipping to a PREVIEW URL first, 2026-07-30
+
+Amended after the grill. J&M have not seen the site yet and their DNS has not moved, so
+there is a demo step between build and cutover that the original plan did not have.
+
+`- domain: none` plus `- preview: https://wyatt741.github.io/jm-glass/` is the sanctioned
+third state (`ship.py`): a project repo may ship to its Pages project URL with **no CNAME**,
+and `engine.Site(preview=True)` makes every page `noindex,nofollow` with a `Disallow: /`
+robots.txt, so the staging copy can never compete with jmglassllc.com in search.
+
+**At cutover, in ONE motion** (standing rule, RUN.md phase 7): change `- domain:` here to
+`jmglassllc.com` and drop the `- preview:` line, flip `PREVIEW_BASE`/`preview=True` in
+`build.py`, `printf 'jmglassllc.com\n' > CNAME`, move the DNS, then `gate.py --ship` and
+`ship.py`.
+
+## Original hosting note — CNAME is deliberately absent this run
 
 `ship.py` ruling 6 requires that a settled custom domain ALREADY have a matching `CNAME` file at
 ship time, and it refuses a project-page repo that settles no custom domain. KICKOFF is equally

@@ -41,11 +41,27 @@ def _bust(name):
 # ============================ CONFIG ============================
 # RAW text. Never HTML entities — the engine escapes for HTML and keeps the raw
 # value for JSON-LD, and refuses to build on a pre-escaped value (§2, §4).
+# ---------------------------------------------------------------------------
+# THE CUTOVER SWITCH. Two lines, and docs/SETTLED.md's `- preview:` line.
+#
+#   PREVIEW (now):  domain = PREVIEW_BASE, preview = True   -> noindex, no CNAME,
+#                   a sendable URL at https://wyatt741.github.io/jm-glass/ while
+#                   jmglassllc.com still points at their WordPress host.
+#   LIVE (cutover): domain = "jmglassllc.com", preview = False, write CNAME, and
+#                   change SETTLED's `- domain:` line. All three in ONE motion with
+#                   the DNS change (standing rule, RUN.md phase 7).
+#
+# The engine builds every canonical, OG url, sitemap entry and the JSON-LD url from
+# `domain`, so the subpath belongs there and nowhere else.
+# ---------------------------------------------------------------------------
+PREVIEW_BASE = "wyatt741.github.io/jm-glass"
+
 SITE = engine.Site(
     biz="J&M Glass LLC",
     tag="Commercial glazing and tenant improvement",
     city="Phoenix, AZ",
-    domain="jmglassllc.com",
+    domain=PREVIEW_BASE,
+    preview=True,
     addr="1502 N 29th Ave, Phoenix, AZ 85009",
     phone="623-243-5538",
     phone_tel="+16232435538",

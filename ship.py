@@ -279,7 +279,7 @@ def parse_settled(root=ROOT):
     path = Path(root) / "docs" / "SETTLED.md"
     info = {"exists": path.exists(), "domain": None, "domain_answered": False,
             "domain_raw": None, "repo": None, "tier": None, "pages": None,
-            "rights": None}
+            "rights": None, "preview": None}
     if not info["exists"]:
         return info
     for raw in path.read_text(errors="replace").splitlines():
@@ -317,12 +317,41 @@ def parse_settled(root=ROOT):
         value = keyed_value(line, "rights")
         if value is not None and info["rights"] is None:
             info["rights"] = value
+        # A PRE-CUTOVER CLIENT PREVIEW on GitHub Pages. Legal third state beside
+        # "custom domain" and "the user site": a project repo may ship to
+        # https://<user>.github.io/<repo>/ with no CNAME, so the client can be sent
+        # a URL before their DNS moves. engine.Site(preview=True) makes those pages
+        # noindex, and ship never writes a CNAME in this state.
+        value = keyed_value(line, "preview")
+        if value is not None and info["preview"] is None:
+            m = DOMAIN.search(value)
+            if m and not UNSETTLED.search(value):
+                info["preview"] = value.strip()
+
         value = keyed_value(line, "hosting", "host")
         if value is not None and info["pages"] is None:
             # only an explicit github answer counts — "Cloudflare Pages" must
             # not read as GitHub Pages; ambiguity fails closed (hands to Wyatt)
             info["pages"] = "github" in value.lower()
     return info
+
+
+def preview_noindex_check():
+    """A public preview that is NOT the client's domain must not be crawlable, or a
+    staging copy competes with the real site in search."""
+    pages = sorted(ROOT.glob("*.html"))
+    indexable = [p.name for p in pages
+                 if 'content="noindex' not in p.read_text(errors="replace")]
+    if indexable:
+        bad("preview ship but these pages are still indexable: "
+            + ", ".join(indexable)
+            + " — build with engine.Site(preview=True) and re-gate")
+    else:
+        ok(f"all {len(pages)} preview page(s) carry noindex")
+    rb = ROOT / "robots.txt"
+    if rb.exists() and "Disallow: /" not in rb.read_text():
+        bad("preview ship but robots.txt does not Disallow: / — "
+            "engine.robots() does this when preview=True")
 
 
 def publish_scope_check():
@@ -396,12 +425,17 @@ def settled_check():
     if not info["repo"]:
         bad("docs/SETTLED.md carries no repo name — need a line like `repo: jm-glass`")
     if info["domain_answered"] and info["repo"]:
-        if info["domain"] is None and info["repo"] != USER_SITE_REPO:
+        if info["domain"] is None and info["repo"] != USER_SITE_REPO \
+                and not info["preview"]:
             bad(f"domain settled as {info['domain_raw']!r} (no custom domain) but "
-                f"repo '{info['repo']}' is not {USER_SITE_REPO} — project-page "
-                f"canonical unsupported — custom domain, user-site repo, or wait "
-                f"for the engine base-path mode (backlogged, see AUDIT_SYNTHESIS "
-                f"open items)")
+                f"repo '{info['repo']}' is not {USER_SITE_REPO} — either settle a "
+                f"custom domain, or declare a pre-cutover preview with "
+                f"`- preview: https://{GH_OWNER}.github.io/<repo>/` and build with "
+                f"engine.Site(preview=True)")
+        elif info["domain"] is None and info["preview"]:
+            ok(f"PREVIEW ship: {info['preview']} — no custom domain, no CNAME, and "
+               f"the pages must be noindex (engine.Site(preview=True))")
+            preview_noindex_check()
         else:
             ok(f"SETTLED: domain {info['domain'] or f'none (user site {USER_SITE_REPO})'}, "
                f"repo {info['repo']}, chatbot tier {info['tier'] or 'not stated'}, "
@@ -514,6 +548,8 @@ def build_plan(info, hash_line, stamp_line):
                      f"'{tier or 'not stated'}', only hybrid deploys", None))
 
     urls = []
+    if not domain and info.get("preview"):
+        urls.append(f"{info['preview']} (PREVIEW, noindex, not the client's domain)")
     if domain:
         urls.append(f"https://{domain}/")
         if tier == "hybrid":

@@ -43,7 +43,7 @@ class Site:
                  email="", hours="", theme_color="#000000", fonts_href="",
                  css="styles.css?v=1", js="app.js?v=1", lang="en",
                  og_image=None, socials=(), schema_type="LocalBusiness", extra_head="",
-                 no_publish=()):
+                 no_publish=(), preview=False):
         for name, value in (("biz", biz), ("tag", tag), ("city", city),
                             ("addr", addr), ("hours", hours)):
             if _ENTITY.search(value or ""):
@@ -58,7 +58,14 @@ class Site:
         self.biz, self.tag, self.city, self.addr, self.hours = (
             escape(self.raw[k]) for k in self.TEXT)
 
-        self.domain, self.base = domain, f"https://{domain}"
+        # `domain` may carry a base PATH for a Pages project URL, e.g.
+        # "wyatt741.github.io/jm-glass". Everything derived from base then stays
+        # honest on a subpath: canonicals, OG urls, the sitemap, the JSON-LD url.
+        self.domain, self.base = domain, f"https://{domain.rstrip('/')}"
+        # A pre-cutover client preview. It is a real public URL that is NOT the
+        # client's domain, so it must never be indexed: a staging copy competing
+        # with the live site is the classic way to split a small business's SEO.
+        self.preview = bool(preview)
         self.phone, self.phone_tel, self.email = phone, phone_tel, email
         self.theme_color, self.fonts_href = theme_color, fonts_href
         self.css, self.js, self.lang = css, js, lang
@@ -131,7 +138,7 @@ class Site:
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canon}">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="{'noindex,nofollow' if self.preview else 'index,follow'}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">
@@ -181,6 +188,9 @@ def sitemap(site, pages):
 
 
 def robots(site):
+    if getattr(site, "preview", False):
+        # a preview is public but must not be crawled
+        return f"User-agent: *\nDisallow: /\nSitemap: {site.base}/sitemap.xml\n"
     return f"User-agent: *\nAllow: /\nSitemap: {site.base}/sitemap.xml\n"
 
 
@@ -230,5 +240,7 @@ def build(site, pages, *, quiet=False):
     with open("_config.yml", "w", encoding="utf-8") as f:
         f.write(pages_config(getattr(site, "no_publish", ())))
     if not quiet:
+        mode = " [PREVIEW: noindex, robots Disallow]" if getattr(
+            site, "preview", False) else ""
         print("built:", ", ".join(pages),
-              "+ sitemap.xml, robots.txt, _config.yml")
+              "+ sitemap.xml, robots.txt, _config.yml" + mode)

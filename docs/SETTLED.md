@@ -58,6 +58,23 @@ Carried from the brief so the authoring phase cannot forget:
 - `cfc_1-5` are the best curtain-wall photographs on their server and belong to no project page.
   They ship as capability photographs with generic captions, never captioned as a named project.
 
+## Accepted exposure: the FormSubmit address is in page source, 2026-07-30
+
+A PII sweep of the public repo found `wyatt741@gmail.com` live in the contact form's `action`,
+in `app.js`'s `LEAD_URL`, and across 8 tracked files and 7 commits. **KICKOFF says that address
+is "never displayed", and a form action IS page source, so the two disagree.**
+
+**Wyatt's call: leave it. It is a throwaway address.** Do not "fix" this in a later pass. The
+options were offered and declined: pointing the form at `jmglassllc@gmail.com`, activating
+FormSubmit and swapping to the hashed endpoint, or scrubbing history with a force-push.
+
+If it ever does need removing, the cheapest route is FormSubmit's hashed endpoint, which
+requires activating the form first (one real submission plus the confirmation click).
+
+Everything else in the sweep was clean: **0 of 178 published photographs carry EXIF or GPS**,
+no keys or tokens, `.git/gate.key` untracked, the client's four staff emails absent, and the
+competitor research absent from every commit.
+
 ## Hosting note — shipping to a PREVIEW URL first, 2026-07-30
 
 Amended after the grill. J&M have not seen the site yet and their DNS has not moved, so

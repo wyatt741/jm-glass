@@ -188,8 +188,7 @@ PARTNERS = [
 
 PAGE_TITLES = {
     "index.html": "Home",
-    "scope.html": "Scope",
-    "projects.html": "Projects",
+    "on-the-job.html": "On the job",
     "contact.html": "Bid invitations",
 }
 
@@ -250,7 +249,6 @@ def titleblock(here):
     </a>
     <dl class="tblock-data">
       <div class="tb-field"><dt class="tb-key">ROC</dt><dd class="tb-val">302375</dd></div>
-      <div class="tb-field"><dt class="tb-key">Scope</dt><dd class="tb-val">Commercial only</dd></div>
       <div class="tb-field tb-field--call"><dt class="tb-key">Call</dt><dd class="tb-val"><a href="tel:{SITE.phone_tel}">{SITE.phone}</a></dd></div>
     </dl>
     <nav class="jump" aria-label="Sheets">
@@ -358,10 +356,10 @@ def home():
     <div class="opening-copy">
       <h1 class="opening-claim">Commercial glazing for Arizona general contractors.</h1>
       <p class="opening-sub">Storefront, curtain wall, window wall and interior glass.
-        Commercial only. Licensed in Arizona since 2015.</p>
+        Licensed in Arizona since 2015.</p>
       <p class="opening-acts">
         <a class="act" href="contact.html">Send a bid invitation</a>
-        <a class="act act--quiet" href="scope.html">See the scope list</a>
+        <a class="act act--quiet" href="on-the-job.html">See the scope list</a>
       </p>
     </div>
     <div class="opening-plate">{plate(hero, eager=True, sizes=SZ_HERO)}</div>
@@ -377,13 +375,13 @@ def home():
   <section class="scope" aria-labelledby="scope-h">
     <h2 class="scope-h" id="scope-h">The work we do</h2>
     <ul class="scope-list">{scope_rows}</ul>
-    <p class="scope-more"><a class="act act--quiet" href="scope.html">Each scope, with the work behind it</a></p>
+    <p class="scope-more"><a class="act act--quiet" href="on-the-job.html">Each scope, with the work behind it</a></p>
   </section>
 
   <section class="shots" aria-labelledby="shots-h">
     <h2 class="shots-h" id="shots-h">Work in Arizona</h2>
     <div class="glazing">{tiles}</div>
-    <p class="shots-more"><a class="act act--quiet" href="projects.html">All {SHOWN_PROJECTS} projects</a></p>
+    <p class="shots-more"><a class="act act--quiet" href="on-the-job.html">All {SHOWN_PROJECTS} projects</a></p>
   </section>
 
   <section class="gcs" aria-labelledby="gcs-h">
@@ -397,8 +395,8 @@ def home():
       <p>J&amp;M Glass was founded in 2015 by Mike Cook and Bill Fain, and has been a
         licensed Arizona glazing contractor since 9 November that year. Mike estimates,
         Bill runs the projects.</p>
-      <p>The crew works every scope listed on this site. Commercial only, from shell
-        storefront and curtain wall through tenant improvement interiors.</p>
+      <p>The crew works every scope listed on this site, from shell storefront and
+        curtain wall through tenant improvement interiors.</p>
     </div>
     <div class="crew-plate">
       <figure class="plate">
@@ -419,41 +417,24 @@ def home():
         "index.html", body, body_class="sheet")
 
 
-def scope():
+def on_the_job():
+    """Scope and the project record on one sheet.
+
+    They were two pages until 2026-07-30, and the split did not survive being
+    measured: scope.html's twelve photographs were all already in the project
+    record, and its twelve names and notes were identical to the list on the home
+    sheet. Two indexes of the same evidence belong on the same page, which is also
+    how an estimator reads it: what do you do, and where have you done it.
+    """
     cells = ""
     for name, photo_file, note in SCOPES:
         photo = BY_FILE[photo_file]
         cap = CAPABILITY_CAPTION if photo_file.startswith("cfc-") else None
         cells += (f'<li class="lite scope-cell">'
                   f'{plate(photo, caption=cap)}'
-                  f'<h2 class="scope-cell-name">{name}</h2>'
+                  f'<h3 class="scope-cell-name">{name}</h3>'
                   f'<p class="scope-cell-note">{note}</p></li>')
-    body = f'''{titleblock("scope.html")}
-<main id="main">
-  <section class="pagehead">
-    <h1 class="pagehead-h">Scope of work</h1>
-    <p class="pagehead-sub">Twelve commercial glazing scopes. Each one is shown with a
-      photograph of the work, taken on our own jobs.</p>
-  </section>
-  <section class="scopesheet" aria-label="Scopes">
-    <ul class="glazing glazing--two">{cells}</ul>
-  </section>
-  <section class="askline">
-    <h2 class="askline-h">Need a scope that is not listed?</h2>
-    <p class="askline-p">If it is commercial glass and aluminum, ask. We do not take
-      residential glass.</p>
-    <p><a class="act" href="contact.html">Send a bid invitation</a></p>
-  </section>
-</main>
-{sheetfoot()}'''
-    return SITE.page(
-        f"Scope of Work | {SITE.biz}",
-        "The twelve commercial glazing scopes J&M Glass works in, each shown "
-        "with a photograph of the work: storefront, curtain wall, window wall, more.",
-        "scope.html", body, body_class="sheet")
 
-
-def projects():
     records = ""
     for proj in MANIFEST["projects"]:
         if not proj["photos"]:
@@ -466,7 +447,7 @@ def projects():
         where = f'<p class="record-where">{proj["city"]}</p>' if proj["city"] else ""
         records += f'''<article class="record" data-kinds="{kinds}">
       <div class="record-head">
-        <h2 class="record-name">{proj["title"]}</h2>
+        <h3 class="record-name">{proj["title"]}</h3>
         {where}
         <ul class="record-tags">{tags}</ul>
       </div>
@@ -477,35 +458,51 @@ def projects():
         f'<div class="lite">{plate(p, caption=CAPABILITY_CAPTION, sizes=SZ_FOUR)}</div>'
         for p in MANIFEST["capability"])
 
-    body = f'''{titleblock("projects.html")}
+    body = f'''{titleblock("on-the-job.html")}
 <main id="main">
   <section class="pagehead">
-    <h1 class="pagehead-h">Project record</h1>
-    <p class="pagehead-sub">{SHOWN_PROJECTS} projects with photographs, in two categories:
-      commercial shell and tenant improvement. Every photograph is our own.</p>
+    <h1 class="pagehead-h">On the job</h1>
+    <p class="pagehead-sub">Every scope we work in, and {SHOWN_PROJECTS} Arizona projects,
+      all shown with our own job-site photographs.</p>
+  </section>
+
+  <section class="scopesheet" aria-labelledby="scopes-h">
+    <h2 class="scopesheet-h" id="scopes-h">The {len(SCOPES)} scopes</h2>
+    <ul class="glazing glazing--two">{cells}</ul>
+  </section>
+
+  <section class="records-sheet" aria-labelledby="record-h">
+    <h2 class="records-h" id="record-h">Where we have done it</h2>
     <div class="filterbar" data-filterbar hidden>
       <span class="filterbar-lbl" id="filter-lbl">Show</span>
       <button class="filter" type="button" data-kind="all" aria-pressed="true">All</button>
       <button class="filter" type="button" data-kind="commercial-shell" aria-pressed="false">Commercial shell</button>
       <button class="filter" type="button" data-kind="tenant-improvements" aria-pressed="false">Tenant improvement</button>
     </div>
+    <div class="records" data-records>
+      {records}
+    </div>
   </section>
-  <section class="records" aria-label="Projects" data-records>
-    {records}
-  </section>
+
   <section class="capsheet" aria-labelledby="cap-h">
     <h2 class="cap-h" id="cap-h">Curtain wall</h2>
     <p class="cap-p">These frames are from our own curtain wall work. They are shown as
       capability photographs because the project they belong to is not published.</p>
     <div class="glazing glazing--four">{caps}</div>
   </section>
+
+  <section class="askline">
+    <h2 class="askline-h">Need a scope that is not listed?</h2>
+    <p class="askline-p">If it is commercial glass and aluminum, ask.</p>
+    <p><a class="act" href="contact.html">Send a bid invitation</a></p>
+  </section>
 </main>
 {sheetfoot()}'''
     return SITE.page(
-        f"Project Record | {SITE.biz}",
-        f"{SHOWN_PROJECTS} commercial glazing projects in Arizona by J&M Glass, shown "
-        "with our own job-site photographs. Commercial shell and tenant improvement.",
-        "projects.html", body, body_class="sheet")
+        f"On the Job | {SITE.biz}",
+        f"The {len(SCOPES)} commercial glazing scopes J&M Glass works in, and "
+        f"{SHOWN_PROJECTS} Arizona projects, each shown with our own job-site photographs.",
+        "on-the-job.html", body, body_class="sheet")
 
 
 def contact():
@@ -588,8 +585,7 @@ def contact():
 
 PAGES = {
     "index.html": home,
-    "scope.html": scope,
-    "projects.html": projects,
+    "on-the-job.html": on_the_job,
     "contact.html": contact,
 }
 

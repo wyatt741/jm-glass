@@ -296,6 +296,42 @@ The Worker was deliberately not deployed: the widget's `WORKER_URL` is
 leave an orphan Worker on a workers.dev URL that PLAYBOOK §6 forbids serving the bot from.
 The canned answers carry the preview.
 
+## Phase 8, structural edit after the preview, 2026-07-30
+
+Wyatt read the shipped preview and asked two questions. Both were right, and both were
+checked against the files before acting rather than agreed with.
+
+**1. "Shouldn't the scope and projects be the same page?"** Measured: `scope.html`'s twelve
+photographs were **all twelve already on `projects.html`** (zero unique), and its twelve names
+and notes were **byte-identical** to the list already on the home sheet. It was a third
+presentation of content that existed twice. The two pages are two indexes of the same evidence,
+which is also how an estimator reads it: what do you do, and where have you done it.
+
+Merged into **`on-the-job.html`** — his name, chosen over "Work" (a designer's word, not a
+glazier's) and over the literal "Scope and projects". Structure: the 12 scopes with their
+photographs, then the 21-project record with its filter, then the curtain wall capability
+frames, then the bid CTA. Home keeps its text-only scope list as the teaser. **Page set is now
+three:** `index.html`, `on-the-job.html`, `contact.html`.
+
+**2. "Why are we saying commercial only? Isn't that a given?"** Half right, and the half that
+matters. It appeared **11 times across 4 pages**, including the masthead data strip of every
+page. To a GC estimator it IS a given. It is not a given from the outside though: their ROC
+class is CR-65 **Specialty Dual**, which covers residential; their Facebook posted pool-fence
+work; one of their current homepage icons is a shower; and the two recent Google reviews
+describe automotive work. So the fact earns its place, but its job is deflecting residential
+callers, not informing estimators.
+
+Cut from the masthead strip (all pages), the hero sub, and the crew copy. Kept in the footer
+and on the contact sheet, where a residential caller actually lands. **11 mentions to 4**, and
+the masthead is down to ROC and the phone number.
+
+Both counts on the merged page are now **derived** (`len(SCOPES)`, `SHOWN_PROJECTS`) after a
+review caught the sub mixing a spelled "Twelve" with a numeral "21".
+
+Re-verified after the edit: `gate.py` green, **overlap still 0 against all five** registry
+sites on 131 classes, `visual_qa.py` **54 assertions 0 failures** across 3 pages x 2 widths x
+2 themes.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

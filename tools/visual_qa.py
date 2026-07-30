@@ -32,7 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs" / "qa" / "visual"
-PAGES = ["index.html", "scope.html", "projects.html", "contact.html"]
+PAGES = ["index.html", "on-the-job.html", "contact.html"]
 VIEWPORTS = {1440: 900, 430: 932}
 THEMES = ("light", "dark")
 MIN_TAP = 44
@@ -363,7 +363,7 @@ def main():
         wiz = tab.evaluate("() => document.querySelectorAll('.ask-opt').length")
         (ok if wiz else bad)(f"quote wizard advances and offers its options ({wiz})")
 
-        tab.goto(f"{base}/projects.html", wait_until="load")
+        tab.goto(f"{base}/on-the-job.html", wait_until="load")
         barvis = tab.evaluate("() => !document.querySelector('[data-filterbar]').hidden")
         total = tab.evaluate("() => document.querySelectorAll('[data-kinds]').length")
         tab.click('[data-kind="tenant-improvements"]')

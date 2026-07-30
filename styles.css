@@ -595,7 +595,15 @@ h1, h2, h3 { text-transform: none; }
 .shots-more, .scope-more { margin-top: 1.5em; }
 
 /* ---- scope sheet: 12 cells, one per scope ---- */
-.scopesheet { padding-top: 0 !important; border-top: 0; }
+/* the scope index and the project record now share one sheet, so both get the
+   normal section rhythm and a heading of their own */
+.scopesheet-h,
+.records-h {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 1.95rem);
+  margin-bottom: .8em;
+}
+.records-sheet .filterbar { margin-top: 0; margin-bottom: 1.6em; }
 .scope-cell { padding-bottom: 18px; }
 .scope-cell .plate { margin-bottom: 14px; }
 .scope-cell-name {

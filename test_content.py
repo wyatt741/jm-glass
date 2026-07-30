@@ -17,6 +17,14 @@ gap; hardened 2026-07-29 against red-team fixtures a8/a9/a10/a15):
   recognised markers are machine markers on the element itself: a `data-sample`
   attribute, or an `<!-- SAMPLE -->` comment immediately preceding the tag.
   Nearby copy that merely contains the word SAMPLE does not count.
+- SHIPPED JS COPY (2026-07-30, jm-glass shakedown): the string literals in app.js
+  and worker/worker.js are checked for the same discipline as the HTML. Copy that a
+  site renders from JavaScript, or feeds to a chatbot as its system prompt, is
+  never in the generated pages, so every check above used to miss it. On the
+  shakedown that blind spot shipped a chat chip contradicting the page it sat on,
+  a stale "travel centre", and a Worker still carrying 555-555-5555 and
+  PLACEHOLDER-domain.com. Checked: em/en dashes, template placeholder residue, and
+  unreplaced TODO markers.
 - Hero visual (taste-critic gap): index.html's FIRST <section> must carry a
   real visual — an <img>/<video> with a declared width or height >= 480 (and,
   for img, a real alt text), or an inline <svg> with a viewBox and actual
@@ -27,6 +35,86 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 DASHES = re.compile(r'[—–]')
+
+# ---- shipped JS copy ----------------------------------------------------------
+# Files whose string literals reach a human: rendered into the page by script, or
+# handed to an LLM as its system prompt.
+JS_TARGETS = ("app.js", "worker/worker.js")
+# Residue from the template's own placeholders. Every one of these shipped for real
+# on the shakedown because no gate looked inside a .js file.
+JS_PLACEHOLDERS = re.compile(
+    r'PLACEHOLDER|\bTODO\b|\bFIXME\b|lorem ipsum|555-555-5555|example\.com'
+    r'|BUSINESS NAME|yourdomain|SITE-chat|\bacme\b', re.I)
+JS_QUOTES = "'\"`"
+
+
+def js_literals(text):
+    """Every string literal in the source, comments skipped.
+
+    A single pass, because stripping comments first is wrong: `https://` contains
+    `//`, so a regex comment-stripper blanks the rest of any line holding a URL and
+    the scan goes blind to placeholder domains, which is the main thing it is for.
+    Not a full JS parser (no regex-literal handling), but it tracks strings,
+    template literals, line comments and block comments, which is what decides
+    whether a `//` opens a comment or sits inside a string.
+    """
+    i, n = 0, len(text)
+    while i < n:
+        c = text[i]
+        # comments, but only when NOT inside a string (we never are, here)
+        if c == "/" and i + 1 < n:
+            if text[i + 1] == "/":
+                j = text.find("\n", i)
+                i = n if j < 0 else j + 1
+                continue
+            if text[i + 1] == "*":
+                j = text.find("*/", i + 2)
+                i = n if j < 0 else j + 2
+                continue
+        if c in JS_QUOTES:
+            quote = c
+            i += 1
+            buf = []
+            while i < n:
+                ch = text[i]
+                if ch == "\\":            # escape: take the next char verbatim
+                    buf.append(text[i:i + 2])
+                    i += 2
+                    continue
+                if ch == quote:
+                    i += 1
+                    break
+                if ch == "\n" and quote != "`":
+                    break                 # unterminated single/double quote
+                buf.append(ch)
+                i += 1
+            yield "".join(buf)
+            continue
+        i += 1
+
+
+def check_js(failures):
+    """The same copy discipline the pages get, applied to shipped JS."""
+    checked = 0
+    for rel in JS_TARGETS:
+        f = Path.cwd() / rel
+        if not f.exists():
+            continue
+        checked += 1
+        text = f.read_text(errors="replace")
+        for lit in js_literals(text):
+            if not lit.strip():
+                continue
+            # a literal that is ABOUT dashes may name them: the Worker's own house
+            # rule says "NEVER use em dashes (—)". Anything else may not.
+            if DASHES.search(lit) and "dash" not in lit.lower():
+                failures.append(f"{rel}: em/en dash in a shipped string: "
+                                f"...{lit.strip()[:70]}...")
+            m = JS_PLACEHOLDERS.search(lit)
+            if m:
+                failures.append(f"{rel}: template placeholder {m.group(0)!r} still in "
+                                f"a shipped string: ...{lit.strip()[:70]}...")
+    return checked
 PLACEHOLDER = re.compile(r'placeholder', re.I)
 MIN_VISUAL = 480   # minimum declared px on the hero img/video
 MIN_ALT = 2        # rejects '', '.', and other single-char alt text
@@ -295,11 +383,12 @@ def fail_list():
                     f"{MIN_VISUAL} and a real alt, or an inline svg with a "
                     "viewBox and content; spacers do not count")
 
-    return failures, len(pages)
+    js_checked = check_js(failures)
+    return failures, len(pages), js_checked
 
 
 def main():
-    failures, n = fail_list()
+    failures, n, js_checked = fail_list()
     if failures:
         print(f"FAIL test_content ({len(failures)}):", file=sys.stderr)
         for f in failures:
@@ -308,6 +397,8 @@ def main():
     print(f"ok — {n} pages: no inline styling (any encoding), no dash-copy "
           f"(entities included), no unmarked placeholders, rating claims match "
           f"docs/REVIEWS_SOURCE.md, hero visual real")
+    print(f"     + {js_checked} shipped JS file(s): no dash-copy, no placeholder "
+          f"residue in any string a visitor or a chatbot ever sees")
 
 
 if __name__ == "__main__":

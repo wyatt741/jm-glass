@@ -94,6 +94,7 @@ VERDICT_TOKEN = re.compile(r"\b(ACCEPT|REJECT)\b", re.I)
 # `git status --porcelain -uall` is a stray and refuses the ship by name.
 SHIP_SET_FILES = {
     "styles.css", "app.js", "build.py", "engine.py", "sitemap.xml", "robots.txt",
+    "_config.yml",
     "CNAME", ".gitignore", "gate.py", "qa.py", "ship.py", "preflight.py",
     "test_seo.py", "test_knobs.py", "test_content.py", "test_unique.py",
     # the rest of what preflight --start lands in every site repo:
@@ -103,6 +104,12 @@ SHIP_SET_DIRS = ("worker/", "assets/", "docs/", ".claude/")
 SIDE_BY_SIDE = ROOT / "docs" / "qa" / "side-by-side"
 
 HOOK_MARKER = "ship.py pre-push guard"
+
+# Paths that must never be served from the client's own domain. engine.build()
+# writes _config.yml to exclude them; this is the assertion that it actually did.
+# The jm-glass shakedown would otherwise have published the competitor research,
+# the GBP review notes and the raw research JSON to jmglassllc.com.
+MUST_NOT_SERVE = ("docs/", "tools/", "worker/", "assets/src/")
 
 FAILURES = []
 
@@ -318,6 +325,41 @@ def parse_settled(root=ROOT):
     return info
 
 
+def publish_scope_check():
+    """The repo must not serve its own working papers.
+
+    A Pages repo is public, so this cannot hide anything from GitHub. What it does
+    is stop the CLIENT'S DOMAIN from serving research, tooling and source. The
+    exclusion is a real Pages mechanism, so it is checked rather than assumed."""
+    cfg = ROOT / "_config.yml"
+    if not cfg.exists():
+        bad("_config.yml missing — GitHub Pages runs Jekyll and would copy the WHOLE "
+            "repo to the live origin, including docs/ (research, review notes, raw "
+            "JSON). engine.build() writes it; run `python3 build.py` and re-gate")
+        return
+    text = cfg.read_text(errors="replace")
+    absent = [d for d in MUST_NOT_SERVE
+              if d not in text and d.rstrip("/") not in text]
+    if absent:
+        bad("_config.yml does not exclude " + ", ".join(absent)
+            + " — those would be served from the client's own domain. Restore the "
+              "engine's NOT_THE_SITE list (or add them via engine.Site(no_publish=...))")
+        return
+    ok(f"_config.yml excludes {len(MUST_NOT_SERVE)} non-site path(s) from the live "
+       f"origin (docs/, tools/, worker/, assets/src/)")
+    served = [p.relative_to(ROOT).as_posix() for p in ROOT.rglob("*")
+              if p.is_file() and p.suffix.lower() in (".html", ".css", ".js")
+              and not any(part in ("docs", "tools", "worker", ".claude", ".git",
+                                   "__pycache__", "src")
+                          for part in p.relative_to(ROOT).parts[:-1])]
+    print(f"   the live origin will serve {len(served)} html/css/js file(s) plus "
+          f"assets/; everything else stays in the repo unserved", flush=True)
+    if (ROOT / "docs" / "research").is_dir():
+        print("   note — docs/research/ is in the PUBLIC repo (Pages requires public) "
+              "but is not served from the domain. Move it out if the repo itself "
+              "should not carry it.", flush=True)
+
+
 def cname_check(info):
     """CNAME is INSIDE the gate-pinned tree (ruling 2), so ship verifies it
     against the settled domain instead of writing it post-stamp — a post-stamp
@@ -496,6 +538,7 @@ def main():
     ship_set_check()   # no strays, no `git add -A` (ruling 7)
     verdict_check()    # §12.8 explicit ACCEPT + composite evidence (ruling 5)
     info = settled_check()  # domain/repo fail-closed + CNAME pinning (ruling 6)
+    publish_scope_check()   # the domain must not serve the working papers
 
     lines = HASH_FILE.read_text().splitlines() if HASH_FILE.exists() else []
     plan = build_plan(info, lines[0].strip() if lines else "",

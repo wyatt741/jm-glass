@@ -97,7 +97,7 @@ export default {
     if (request.method !== "POST") return json({ error: "Method not allowed" }, 405, h);
     if (!ALLOWED.includes(origin)) return json({ error: "Forbidden" }, 403, h);  // cheap gate; pair with a spend cap
 
-    // Per-IP rate limit (native binding, consistent + burst-safe — see wrangler.jsonc).
+    // Per-IP rate limit (native binding, consistent + burst-safe, see wrangler.jsonc).
     const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
     const { success } = await env.RL.limit({ key: ip });
     if (!success)

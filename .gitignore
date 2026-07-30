@@ -5,3 +5,8 @@ assets/src/
 docs/qa/*
 !docs/qa/side-by-side/
 .preflight-backup/
+
+# working papers: on disk and backed up to ../jm-glass-research-private/, but
+# never in the repo, because Pages needs a public repo and the client gets that URL
+docs/research/
+docs/RESEARCH_BRIEF.md

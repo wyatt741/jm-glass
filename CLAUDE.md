@@ -45,8 +45,15 @@ mechanics only, and every visible component here was authored for this business.
 - The four leadership headshots are **not rights-cleared** and do not ship.
 - `lifetime_peoria.jpg` is a **rendering**, not a photograph. It does not ship.
 
-Everything above is sourced in [docs/RESEARCH_BRIEF.md](docs/RESEARCH_BRIEF.md) and frozen in
+Everything above is sourced in `docs/RESEARCH_BRIEF.md` and frozen in
 [docs/SETTLED.md](docs/SETTLED.md).
+
+> **The research is not in this repo.** GitHub Pages requires a public repo and the client is
+> sent that URL, so `docs/RESEARCH_BRIEF.md` and `docs/research/` were purged from history on
+> 2026-07-30 before the first push. They remain on disk here (gitignored) and are backed up at
+> `../jm-glass-research-private/`. They document the client's own 1-star reviews, six named
+> competitors and a teardown of their current site: correct working papers, wrong thing for
+> the client to find. Restore them into a repo only if that repo is private.
 
 ## Files
 
@@ -60,7 +67,7 @@ Everything above is sourced in [docs/RESEARCH_BRIEF.md](docs/RESEARCH_BRIEF.md) 
 | `tools/visual_qa.py` | The §12.6/§12.7 half of the contract: tap targets, contrast, focus rings, every authored control |
 | `tools/capture_peers.py` | Captures the registry sites for the §12.8 side-by-side |
 | `tools/serve.py` | Preview server, HTTP/1.1 + threads (a 54-image sheet resets an HTTP/1.0 server) |
-| `docs/research/asset-inventory.json` | Per-frame verdict on all 71 photographs: usable, quality, alt text, flags |
+| `docs/research/asset-inventory.json` | Per-frame verdict on all 71 photographs. **Gitignored working paper**, see the note above |
 
 ## Resume
 

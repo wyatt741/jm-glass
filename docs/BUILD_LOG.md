@@ -257,9 +257,17 @@ back into this repo. Every future site gets them at `preflight --start`.
 | **No gate ever inspected shipped JS copy.** All four gates exited 0 while the chat shipped a chip contradicting the page it sat on, a stale "travel centre", and the Worker carried `555-555-5555` and `PLACEHOLDER-domain.com`. This site keeps **three** copies of the scope list and two were wrong at once | `test_content.py` now scans every string literal in `app.js` and `worker/worker.js` for dashes, placeholder residue and TODO markers. A literal that is *about* dashes may name them, so the Worker's own house rule still passes | Tested both directions on a fixture: clean JS exits 0, the four real shakedown defects all report. **The first version was wrong** and the fixture caught it: stripping comments with `//[^\n]*` also blanks the rest of any line holding a URL, because `https://` contains `//`, so it was blind to `PLACEHOLDER-domain.com`, the main thing it exists to catch. Replaced with a single-pass tokenizer |
 | **Pages would have served the working papers.** Jekyll copies the whole repo to the live origin, so `docs/research/competitors.md`, the GBP review notes and the raw research JSON would have been fetchable from jmglassllc.com | `engine.build()` now writes `_config.yml` excluding `docs/`, `tools/`, `worker/`, `assets/src/` and the build chain. `ship.py` refuses on a missing or incomplete exclusion | Negative-controlled: absent config refuses, and a config that forgets `docs/` refuses by name. Now reports "the live origin will serve 7 html/css/js file(s) plus assets/" |
 
-`ship.py` also prints an honest note that `docs/research/` remains in the **public repo**
-even though the domain will not serve it, because Pages requires a public repo and that
-exposure cannot be designed away. Moving the research out of the repo is a separate call.
+`ship.py` also prints an honest note that `docs/` remains in the **public repo** even though
+the domain will not serve it, because Pages requires a public repo and that exposure cannot be
+designed away.
+
+**That call was then made, 2026-07-30.** Wyatt chose to strip the working papers before the
+first push. `git filter-repo` purged `docs/research/` and `docs/RESEARCH_BRIEF.md` from all 16
+commits and redacted the client's review numbers from the four other tracked files that
+repeated them (`KICKOFF.md`, `CLAUDE.md`, `docs/SETTLED.md`, this log). Verified: 0 occurrences
+of either path or the disclosure string anywhere in history. The files stay on disk, gitignored,
+and are backed up at `../jm-glass-research-private/`. Nothing had been pushed, so this cost
+nothing; after a first push it would have been impossible.
 
 ### Wyatt's §12.8 verdict
 

@@ -420,6 +420,54 @@ sites** — overlap went 0 to 1. Dropped; back to **0 against all five**.
 Final: `gate.py` green, Impeccable detector clean, `visual_qa.py` **54/54**, overlap **0**,
 148 authored classes.
 
+## Phase 11, the copy pass, 2026-07-30
+
+Wyatt: *"21 Arizona projects, 12 scopes, and a license you can check in under a minute? who
+cares? this is also really old info. theyve done waaaaay more jobs. the hero should be
+confident and inspirational. theres too much ai slop text everywhere."*
+
+**The count was the serious one, and it was my error.** `SHOWN_PROJECTS` was derived from the
+manifest, which made it accurate about the photographs and **wrong about the business**. 21 is
+the number of projects that still had photographs on a WordPress site last touched around 2019.
+The research already contained the correction and I did not act on it: their Procore profile
+claims **217 total projects, 84 active** (`RESEARCH_BRIEF` §1). The site was advertising a tenth
+of the company.
+
+The fix is not a bigger number. 217 is claimed, unverified, and not ours to print. It is **no
+number at all**: the photo set is a selection and nothing may imply it is an inventory.
+`SHOWN_PROJECTS` is deleted, "All 21 projects" became "More of the work", and the record heading
+became "Selected projects".
+
+**The slop.** Every line where the site narrated its own credibility instead of just being
+credible:
+
+| Cut | Why |
+|---|---|
+| "21 Arizona projects, 12 scopes, and a license you can check in under a minute." | Counting is not a claim. Replaced with a range statement |
+| "Every line below can be verified without asking us." | The table is the verification. Reduced to "Public at roc.az.gov" |
+| "Every photograph on this site is from one of our own jobs. Nothing here is stock." | Protesting authenticity invites the doubt it answers |
+| "These frames are shown as capability photographs because the project they belong to is not published." | That is my internal reasoning, narrated to a customer |
+| "The crew works every scope **listed on this site**" | Self-referential |
+
+Kept, because they are concrete rather than decorative: the twelve scope descriptions, the bid
+checklist (drawings, spec sections 08 40 00 and 08 80 00, alternates), the founding facts, and
+the ROC record.
+
+**Hero:** "Glass and aluminum, set by the crew that bid it." was inward and technical. Now
+**"Glass is the first thing anyone sees."** Confident, true, elevates the trade rather than the
+company, and it carries no unverifiable claim.
+
+Two defects the restructure introduced, both caught by measurement:
+
+- Making the veil an ancestor turned it into a flow element sized to the copy, so it covered
+  only the lower two thirds and drew **a hard band edge across the photograph**. Frame and veil
+  now share one grid cell.
+- With the frame stretching, `min-height` let it take the photograph's natural 4:3 and run to
+  **1080px**, pushing the controls off the fold. It is a fixed height now.
+
+Verified 360 to 1920: veil covers fully, controls above the fold, **0 overflow**. `gate.py`
+green, detector clean, `visual_qa.py` **54/54**, overlap **0** against all five.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

@@ -427,15 +427,18 @@ h1, h2, h3 { text-transform: none; }
   position: relative;
   max-width: none;
   padding: 0;
-  min-height: clamp(460px, 88svh, 900px);
+  /* a fixed height, not min-height: the frame is a stretching grid item now,
+     so without this it takes the photograph's natural 4:3 and runs to 1080px,
+     which pushes the controls off the fold. */
+  height: clamp(440px, 84svh, 800px);
   display: grid;
-  align-items: end;
+  /* no align-items here: the frame and the veil must STRETCH to fill the cell.
+     The veil's own flex puts the copy at the foot. */
   isolation: isolate;
 }
 .stage-frame {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  grid-area: 1 / 1;        /* stacked with the veil in one cell, not absolute, so
+                              the veil can be a real ANCESTOR of the type */
   overflow: hidden;
   background: var(--ink);
 }
@@ -447,14 +450,13 @@ h1, h2, h3 { text-transform: none; }
   display: block;
 }
 .stage-veil {
-  position: relative;
+  grid-area: 1 / 1;        /* same cell: covers the whole photograph */
   z-index: 1;
-  width: 100%;
+  display: flex;
+  align-items: flex-end;   /* the copy sits at the foot of the frame */
   background: rgba(16, 19, 22, .72);
 }
 .stage-copy {
-  position: relative;
-  z-index: 1;
   width: min(var(--measure), 100% - var(--gut) * 2);
   margin-inline: auto;
   padding-block: clamp(40px, 9svh, 104px);
@@ -1250,7 +1252,7 @@ h1, h2, h3 { text-transform: none; }
 }
 
 @media (max-width: 699px) {
-  .stage { min-height: clamp(420px, 82svh, 720px); }
+  .stage { height: clamp(430px, 80svh, 680px); }
   .stage-claim { font-size: clamp(2.1rem, 9.2vw, 3rem); }
   .stage-sub { font-size: 1.02rem; }
   .shots-lead .plate img { aspect-ratio: 4 / 3; }

@@ -150,10 +150,10 @@ SCOPES = [
 
 CAPABILITY_CAPTION = "Commercial curtain wall installation"
 
-# Derived, never typed. The record only lists projects that HAVE a usable
-# photograph, and an audit caught the page claiming a count the record no longer
-# matched after two frames were dropped for showing no glazing at all.
-SHOWN_PROJECTS = sum(1 for p in MANIFEST["projects"] if p["photos"])
+# No project COUNT is published anywhere. The photo set is what survived on a
+# WordPress site last touched around 2019; their Procore profile claims 217 total
+# and 84 active. Printing the photo count advertised a tenth of the business, so
+# the record is presented as a selection and never as an inventory.
 
 # 23 GC and developer marks recovered from their own server. Rights confirmed by the
 # owner (docs/SETTLED.md). Their current site ships all 23 with EMPTY alt text; every
@@ -371,7 +371,7 @@ def home():
     <div class="stage-veil">
     <div class="stage-copy">
       <p class="stage-eyebrow">Commercial glazing, Phoenix</p>
-      <h1 class="stage-claim">Glass and aluminum,<br>set by the crew that bid it.</h1>
+      <h1 class="stage-claim">Glass is the first thing<br>anyone sees.</h1>
       <p class="stage-sub">Storefront, curtain wall, window wall and interior glass for
         Arizona general contractors.</p>
       <p class="stage-acts">
@@ -383,26 +383,24 @@ def home():
   </section>
 
   <section class="creed">
-    <p class="creed-p">{SHOWN_PROJECTS} Arizona projects, {len(SCOPES)} scopes, and a
-      license you can check in under a minute.</p>
+    <p class="creed-p">Shell storefront through tenant improvement interiors,
+      across the Valley.</p>
   </section>
 
   <section class="stamp" aria-labelledby="stamp-h">
     <h2 class="stamp-h" id="stamp-h">The record, checkable</h2>
-    <p class="stamp-lede">Every line below can be verified without asking us.
-      The license is public at <a href="https://roc.az.gov/" target="_blank" rel="noopener">roc.az.gov</a>.</p>
+    <p class="stamp-lede">Public at
+      <a href="https://roc.az.gov/" target="_blank" rel="noopener">roc.az.gov</a>.</p>
     <dl class="stamp-grid" data-set-in>{record_rows}</dl>
   </section>
 
   <section class="shots" aria-labelledby="shots-h">
     <div class="shots-head">
       <h2 class="shots-h" id="shots-h">The work</h2>
-      <p class="shots-lede">Every photograph on this site is from one of our own jobs.
-        Nothing here is stock.</p>
     </div>
     <div class="shots-lead">{lead_plate}</div>
     <div class="glazing glazing--four" data-set-in>{rest_tiles}</div>
-    <p class="shots-more"><a class="act act--quiet" href="on-the-job.html">All {SHOWN_PROJECTS} projects</a></p>
+    <p class="shots-more"><a class="act act--quiet" href="on-the-job.html">More of the work</a></p>
   </section>
 
   <section class="scope" aria-labelledby="scope-h">
@@ -422,8 +420,8 @@ def home():
       <p>J&amp;M Glass was founded in 2015 by Mike Cook and Bill Fain, and has been a
         licensed Arizona glazing contractor since 9 November that year. Mike estimates,
         Bill runs the projects.</p>
-      <p>The crew works every scope listed on this site, from shell storefront and
-        curtain wall through tenant improvement interiors.</p>
+      <p>The crew runs shell storefront and curtain wall through to tenant
+        improvement interiors.</p>
     </div>
     <div class="crew-plate">
       <figure class="plate">
@@ -496,8 +494,8 @@ def on_the_job():
 <main id="main">
   <section class="pagehead">
     <h1 class="pagehead-h">On the job</h1>
-    <p class="pagehead-sub">Every scope we work in, and {SHOWN_PROJECTS} Arizona projects,
-      all shown with our own job-site photographs.</p>
+    <p class="pagehead-sub">The scopes we work in, and a selection of the jobs
+      behind them.</p>
   </section>
 
   <section class="scopesheet" aria-labelledby="scopes-h">
@@ -506,7 +504,7 @@ def on_the_job():
   </section>
 
   <section class="records-sheet" aria-labelledby="record-h">
-    <h2 class="records-h" id="record-h">Where we have done it</h2>
+    <h2 class="records-h" id="record-h">Selected projects</h2>
     <div class="filterbar" data-filterbar hidden>
       <span class="filterbar-lbl" id="filter-lbl">Show</span>
       <button class="filter" type="button" data-kind="all" aria-pressed="true">All</button>
@@ -520,22 +518,21 @@ def on_the_job():
 
   <section class="capsheet" aria-labelledby="cap-h">
     <h2 class="cap-h" id="cap-h">Curtain wall</h2>
-    <p class="cap-p">These frames are from our own curtain wall work. They are shown as
-      capability photographs because the project they belong to is not published.</p>
+
     <div class="glazing glazing--four" data-set-in>{caps}</div>
   </section>
 
   <section class="askline">
-    <h2 class="askline-h">Need a scope that is not listed?</h2>
-    <p class="askline-p">If it is commercial glass and aluminum, ask.</p>
+    <h2 class="askline-h">Something else in glass?</h2>
+    <p class="askline-p">Ask. If it is commercial, we have probably set it.</p>
     <p><a class="act" href="contact.html">Send a bid invitation</a></p>
   </section>
 </main>
 {sheetfoot()}'''
     return SITE.page(
         f"On the Job | {SITE.biz}",
-        f"The {len(SCOPES)} commercial glazing scopes J&M Glass works in, and "
-        f"{SHOWN_PROJECTS} Arizona projects, each shown with our own job-site photographs.",
+        "The commercial glazing scopes J&M Glass works in, from storefront and "
+        "curtain wall to interior glass, with photographs of the jobs behind them.",
         "on-the-job.html", body, body_class="sheet")
 
 

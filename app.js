@@ -179,7 +179,7 @@
     price: 'Commercial glazing is bid work, so there is no price list. Send the '
       + 'drawings and the bid date and we will tell you quickly whether we are '
       + 'bidding. Call ' + PHONE + ' if it is urgent.',
-    projects: 'The project record has our Arizona projects in two categories, '
+    projects: 'The work sheet has a selection of our Arizona jobs in two categories, '
       + 'commercial shell and tenant improvement, with our own job photographs. '
       + 'Retail, medical, office, fitness, restaurant and travel center.',
     contact: 'Call or text ' + PHONE + ', or email jmglassllc@gmail.com. I can also '

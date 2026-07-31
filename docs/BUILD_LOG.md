@@ -507,6 +507,41 @@ from the heading and the button above and below it. The section is padded now in
 
 `gate.py` green, `visual_qa.py` **54/54**, overlap **0** against all five, 145 classes.
 
+## The GC marks become a ribbon (2026-07-31)
+
+Wyatt: "make this a gliding from right to left." Twenty-three marks in an auto-fill grid
+left a ragged two-item last row on the wide breakpoint, which is what he was looking at.
+
+A logo marquee is on the seven-item banned-reflex list in KICKOFF and PLAYBOOK §5. It is the
+third rule he has overruled deliberately, after the bottom-right assistant and the icon
+toggle. Noted rather than argued: the ban exists to stop a marquee being reached for as
+decoration, and here it fixes a real layout fault.
+
+The run is emitted twice, the second copy `aria-hidden`, and the track travels exactly -50%
+so the loop closes on itself. A screen reader reads twenty-three marks, not forty-six, and
+`alt` stays on every image because `test_seo` requires it.
+
+Three things measured rather than assumed:
+
+- **Phantom h-scroll.** PLAYBOOK §10 warns an unpinned marquee expands the page to its
+  max-content track. Measured `scrollWidth - clientWidth` = 0 at 1440 and 390 with a
+  7728px track.
+- **Reduced motion.** The base a11y block only clamps `animation-duration` to `.01ms`,
+  which would have spun this marquee at seizure speed rather than stopping it. The track
+  gets `animation: none !important` and the band becomes a plain horizontal scroller.
+  Measured `animationName: none` under `reduced_motion: reduce`.
+- **Clipping.** First attempt used `max-height: 100%` on the marks; two of the taller
+  logos overflowed the tile and were cut by the band's `overflow: hidden`. Caught by
+  measuring every mark's rect against the band's, not by looking at it. Back to the fixed
+  `max-height` the grid it replaces used.
+
+The band also dropped the measure and runs the full width of the window. A ribbon that
+stops short of both edges reads as a widget sitting on the page; one that runs off reads as
+a list that continues. The soft mask fade went with it: this site's language is hard mullion
+lines, and a gradient scrim is a different vocabulary.
+
+`gate.py` green, `visual_qa.py` **70/70**, overlap **0** against all five, 146 classes.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

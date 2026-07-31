@@ -763,34 +763,6 @@ h1, h2, h3 { text-transform: none; }
 
 .capsheet .cap-p { margin-bottom: 1.6em; }
 
-/* ---- GC marks. A trademark renders on the background it was drawn for, so the
-   tile stays light in BOTH themes: 17 of the 23 are not dark-safe. ---- */
-.gc-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0;
-  padding: 1px 0 0 1px;      /* same collapse cancellation as .glazing */
-  margin-top: 1.5em;
-}
-.gc {
-  background: #f7f8f9;
-  border: 1px solid var(--line);
-  margin: -1px 0 0 -1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px 14px;
-  min-height: 96px;
-}
-.gc-img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 62px;
-  object-fit: contain;
-}
-
 /* ---- crew ---- */
 .crew { display: grid; gap: clamp(20px, 3vw, 34px); }
 .crew-copy p { color: var(--ink-soft); max-width: 56ch; margin-bottom: 1em; }
@@ -1338,3 +1310,75 @@ h1, h2, h3 { text-transform: none; }
   .scopesheet .glazing--two { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 .record + .record { margin-top: clamp(18px, 2.4vw, 30px); }
+
+/* the section drops the measure so the ribbon can run the full width of the
+   window: a band of marks that stops short of the edges reads as a widget on the
+   page, and one that runs off both sides reads as a list that continues */
+.gcs {
+  max-width: none;
+  padding-inline: 0;
+}
+.gcs-h {
+  width: min(var(--measure), 100% - var(--gut) * 2);
+  margin-inline: auto;
+}
+
+/* ---- the GC marks glide, right to left ----
+   A logo marquee is one of the seven named reflexes in KICKOFF and PLAYBOOK §5.
+   Wyatt asked for it directly. It also fixes a real fault: 23 marks in a 7-column
+   grid left a ragged two-item last row.
+
+   The run is duplicated in the markup and the track travels exactly -50%, so the
+   second copy lands where the first began and the loop is seamless. width:max-content
+   on the track with overflow:hidden on the band is the pinning PLAYBOOK §10 warns
+   about: without it the track expands the page and creates a phantom h-scroll. */
+.gcband {
+  overflow: hidden;
+  width: 100%;
+  margin-top: 1.4em;
+  border-block: 1px solid var(--line);
+}
+.gcband-track {
+  display: flex;
+  width: max-content;
+  list-style: none;
+  animation: gcglide calc(64s * var(--motion)) linear infinite;
+}
+@keyframes gcglide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+/* let someone stop it to read a mark */
+.gcband:hover .gcband-track,
+.gcband:focus-within .gcband-track { animation-play-state: paused; }
+
+.gcmark {
+  flex: 0 0 auto;
+  width: 176px;
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 22px;
+  /* a trademark renders on the background it was drawn for: 17 of the 23 are not
+     dark-safe, so the tile keeps a light field in both themes */
+  background: #f7f8f9;
+  border-right: 1px solid var(--line);
+}
+.gcmark-img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  /* a fixed ceiling, not max-height:100%: the percentage resolves against the
+     tile's content box in a way that let two of the taller marks overflow and
+     get clipped by the band. 58px is what the grid this replaces used */
+  max-height: 62px;
+  object-fit: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* the base a11y block only clamps duration, which would spin this instead of
+     stopping it, so the animation is removed outright */
+  .gcband-track { animation: none !important; }
+  .gcband { overflow-x: auto; }
+}

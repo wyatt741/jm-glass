@@ -360,10 +360,17 @@ def home():
     rest_tiles = "".join(f'<div class="lite">{plate(p, sizes=SZ_THREE)}</div>'
                          for p in rest)
 
-    marks = "".join(
-        f'<li class="gc"><img class="gc-img" src="assets/gc/{f}" alt="{name}" '
-        f'width="250" height="200" loading="lazy" decoding="async"></li>'
-        for f, name in PARTNERS)
+    def gc_run(hidden):
+        # the run is duplicated so the glide can loop seamlessly. The second copy
+        # is aria-hidden so a screen reader reads twenty-three marks, not
+        # forty-six; the alt text stays on the image because test_seo requires it.
+        hide = ' aria-hidden="true"' if hidden else ''
+        return "".join(
+            f'<li class="gcmark"{hide}><img class="gcmark-img" src="assets/gc/{f}" '
+            f'alt="{name}" width="250" height="200" loading="lazy" decoding="async"></li>'
+            for f, name in PARTNERS)
+
+    marks = gc_run(False) + gc_run(True)
 
     team = MANIFEST["team"]
     body = f'''{titleblock("index.html")}
@@ -406,7 +413,9 @@ def home():
 
   <section class="gcs" aria-labelledby="gcs-h">
     <h2 class="gcs-h" id="gcs-h">Who we glaze for</h2>
-    <ul class="gc-list" data-set-in>{marks}</ul>
+    <div class="gcband">
+      <ul class="gcband-track">{marks}</ul>
+    </div>
   </section>
 
   <section class="crew" aria-labelledby="crew-h">

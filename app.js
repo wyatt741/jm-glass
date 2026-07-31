@@ -102,7 +102,11 @@
         e.target.classList.add('is-set');
         io.unobserve(e.target);          // one-way: never re-hide on scroll back
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    // Positive bottom margin: the observer box extends BELOW the viewport so an
+    // element starts moving before it is on screen and has settled by the time it
+    // arrives. The old -8% did the opposite and every reveal was chasing the
+    // scroll (measured: median top-at-reveal 785px in a 900px viewport).
+    }, { rootMargin: '0px 0px 22% 0px', threshold: 0 });
     setIn.forEach((el) => io.observe(el));
   }
 

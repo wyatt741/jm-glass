@@ -297,7 +297,7 @@ def sheetfoot():
     </nav>
   </div>
   <p class="sf-fine">Commercial work only. We do not take residential glass.
-    Serving {SITE.city} and Arizona.</p>
+    Phoenix and the Valley.</p>
 </footer>'''
 
 

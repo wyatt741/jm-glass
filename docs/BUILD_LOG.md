@@ -468,6 +468,45 @@ Two defects the restructure introduced, both caught by measurement:
 Verified 360 to 1920: veil covers fully, controls above the fold, **0 overflow**. `gate.py`
 green, detector clean, `visual_qa.py` **54/54**, overlap **0** against all five.
 
+## Phase 12, Wyatt's review round two, 2026-07-30
+
+Four changes, all his calls.
+
+**Volume is publishable after all.** *"there projects are in the hundreds. why cant we just
+generalize that"* — correct, and I had over-applied §4. The rule bars *invented* content, not
+**owner-supplied** content, and I had published nothing about volume at all. Now "Hundreds of
+commercial projects across the Valley" in the statement band, corroborated by their own Procore
+profile (217 total, 84 active) so the generalisation is conservative. The number 217 itself
+still does not ship: self-reported, unverifiable, and a precise figure invites a precision the
+site cannot defend. Recorded in `SETTLED.md` with its provenance.
+
+**"The record, checkable" was a dare, not a statement.** Cut from the home sheet entirely. The
+footer already carried a licence block, so this was the scope/projects duplication again; the
+footer block absorbed the two facts it lacked (no ROC or BBB complaints, and the roc.az.gov
+link) and the ROC number stays in the masthead of every page. 1,223 characters of now-dead
+`.stamp` CSS removed with it.
+
+**The daylight control is an icon.** A word that says "Light" while the page is light reads as
+a label, not a control. Sun and moon SVGs, swapped by theme, with the word kept in the DOM
+visually hidden so the accessible name survives. Note: `sun` and `moon` are both in the banned
+class vocabulary, hence `dl-day` / `dl-night`.
+
+**The assistant moved to the bottom right.** This contradicts KICKOFF and PLAYBOOK §5, which
+both name a bottom-right chat bubble as a v1 reflex. Wyatt asked for it directly. Worth
+recording *why* the ban existed: the old widget contributed **16 of the 41 duplicated class
+names** on its own. That vocabulary is `cw-*`; this one is `ask-*` and authored here, so the
+uniqueness gate is unaffected. Overlap stayed 0.
+
+**The work sheet was 12,574px tall.** *"a lot of those could be combined on the same lines."*
+The scope index goes three across at 900px and four at 1200px, and each project record now puts
+its label BESIDE its photographs rather than stacked above, removing a heading block of vertical
+space across twenty-one records. **12,574px to 8,566px, no photographs lost.**
+
+Also fixed: the CTA band centred each child independently, so the paragraph sat indented away
+from the heading and the button above and below it. The section is padded now instead.
+
+`gate.py` green, `visual_qa.py` **54/54**, overlap **0** against all five, 145 classes.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

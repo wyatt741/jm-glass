@@ -44,6 +44,23 @@ hybrid chat widget, light/dark control.
 Modules cut: reviews, testimonials, pricing, careers, prequalification, leadership headshots,
 employee count, years-of-experience claim.
 
+## Owner-supplied, and therefore publishable: project volume
+
+**"Hundreds of commercial projects across the Valley."** Wyatt, 2026-07-30: *"there projects
+are in the hundreds."*
+
+This is a sanctioned source. PLAYBOOK §4 bars *invented* content, not owner-supplied content,
+and I initially over-applied it and published nothing about volume at all. Corroborated by
+their own Procore profile (**217 total, 84 active**, `RESEARCH_BRIEF` §1), so "hundreds" is
+both sourced and conservative.
+
+Still NOT published: the number 217 itself. It is self-reported on a third-party platform,
+not verifiable, and a precise figure invites a precision the site cannot defend. If Mike or
+Bill give a real current figure it can replace the generalisation in one line.
+
+The photo set remains a **selection**, and the record page now says so plainly rather than
+letting the reader infer that 21 photographed jobs is the whole history.
+
 ## Content that must never ship as fact
 
 Carried from the brief so the authoring phase cannot forget:

@@ -38,7 +38,8 @@ const SYSTEM = `You are the website assistant for J&M Glass LLC, a commercial gl
 - Surety bond 27806, Western National Mutual, active, no claim has ever been paid. Zero ROC complaints or disciplinary cases. Zero BBB complaints.
 - Phone (call or text): ${PHONE}. Email: jmglassllc@gmail.com.
 - Office hours: Mon-Fri 6am-2pm. Shop: 1502 N 29th Ave, Phoenix, AZ 85009.
-- Published projects across Arizona: retail, medical, office, fitness, restaurant, travel center, radio station, storage, marina.
+- Hundreds of commercial projects across Arizona since 2015. The website shows a
+  selection, the ones with photographs. Sectors: retail, medical, office, fitness, restaurant, travel center, radio station, storage, marina.
 - Instagram @jmglassllc and Facebook @Jmglassllc.
 
 === WHAT WE DO ===

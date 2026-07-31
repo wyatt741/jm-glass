@@ -571,53 +571,15 @@ h1, h2, h3 { text-transform: none; }
   .act--quiet:hover { background: transparent; color: var(--accent-text); border-color: var(--accent-text); }
 }
 
-/* ---- stamp: the checkable licence record ---- */
-.stamp-h,
-.scope-h,
-.shots-h,
-.gcs-h,
-.crew-h,
-.cap-h,
-.askline-h,
-.bid-h,
-.pagehead-h {
+/* shared section heading + lede rules (the licence table they were written
+   alongside now lives in the footer) */
+.scope-h, .shots-h, .gcs-h, .crew-h, .cap-h {
   font-family: var(--font-display);
+  margin-bottom: .55em;
 }
-.stamp-h, .scope-h, .shots-h, .gcs-h, .crew-h, .cap-h {
-  font-size: clamp(1.4rem, 2.5vw, 1.95rem);
-  margin-bottom: .35em;
-}
-.stamp-lede, .scope-more, .shots-more, .cap-p, .askline-p {
+.scope-more, .shots-more, .cap-p, .askline-p {
   color: var(--ink-soft);
-  max-width: 62ch;
-}
-.stamp-lede { margin-bottom: 1.6em; }
-.stamp-grid {
-  display: grid;
-  gap: 0;
-  border-top: 1px solid var(--line);
-}
-.stamp-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 2px;
-  padding-block: 13px;
-  border-bottom: 1px solid var(--line);
-}
-.stamp-key {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.stamp-val { font-size: 1.05rem; font-weight: 500; }
-.stamp-note { display: block; font-size: .92rem; font-weight: 400; color: var(--ink-soft); }
-@media (min-width: 700px) {
-  .stamp-grid { grid-template-columns: 1fr 1fr; column-gap: 40px; }
-  .stamp-row { grid-template-columns: 168px minmax(0, 1fr); gap: 0 18px; align-items: baseline; }
-  .stamp-key { padding-top: 3px; }
+  max-width: 56ch;
 }
 
 /* ---- scope list on the home sheet: rows, never three-across cards ---- */
@@ -1226,11 +1188,10 @@ h1, h2, h3 { text-transform: none; }
   background: var(--ink);
   color: var(--paper);
   max-width: none;
-  padding-inline: 0;
-}
-.wayin > * {
-  width: min(var(--measure), 100% - var(--gut) * 2);
-  margin-inline: auto;
+  /* pad the SECTION rather than centring each child on its own: a child with a
+     narrower max-width was being centred inside the measure and sat indented
+     away from the heading and the button */
+  padding-inline: max(var(--gut), calc((100% - var(--measure)) / 2));
 }
 .wayin-h { color: var(--paper); }
 .wayin-p {
@@ -1238,7 +1199,9 @@ h1, h2, h3 { text-transform: none; }
   opacity: .86;
   font-size: clamp(1.05rem, 1.7vw, 1.25rem);
   max-width: 46ch;
-  margin: .7em auto 1.6em;
+  /* auto side-margins centred it inside the measure, so it sat indented away
+     from the heading and the button above and below it */
+  margin: .7em 0 1.6em;
 }
 .wayin .act {
   background: var(--paper);
@@ -1257,3 +1220,89 @@ h1, h2, h3 { text-transform: none; }
   .stage-sub { font-size: 1.02rem; }
   .shots-lead .plate img { aspect-ratio: 4 / 3; }
 }
+
+/* ---- daylight: an icon, not a word ----
+   'sun' and 'moon' are both in the banned class vocabulary (they appear in all
+   five prior sites), hence dl-day / dl-night. The word stays in the DOM as the
+   accessible name, visually hidden, so the control is still announced properly. */
+.dl-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  display: block;
+}
+.dl-icon.dl-day circle { fill: currentColor; stroke: none; }
+.dl-icon.dl-night { fill: currentColor; stroke: none; }
+/* light theme shows the moon (what a click switches TO), dark shows the sun */
+.dl-day { display: none; }
+:root[data-theme="dark"] .dl-day { display: block; }
+:root[data-theme="dark"] .dl-night { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .dl-day { display: block; }
+  :root:not([data-theme="light"]) .dl-night { display: none; }
+}
+.dl-say {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.daylight {
+  width: 44px;
+  padding-inline: 0;
+  justify-content: center;
+}
+
+/* ---- the assistant, bottom right ----
+   KICKOFF and PLAYBOOK §5 both name a bottom-right chat bubble as a v1 reflex.
+   Wyatt asked for it directly. The thing the ban actually protects against is the
+   shared cw-* vocabulary that made 16 of the 41 duplicated class names; this
+   widget is ask-*, authored here, so the vocabulary stays distinct. */
+.ask {
+  position: fixed;
+  right: clamp(12px, 2vw, 22px);
+  bottom: clamp(12px, 2vw, 22px);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.ask-open {
+  box-shadow: 0 10px 30px -12px rgba(var(--shadow-rgb), .45);
+}
+@media (min-width: 700px) {
+  .ask-panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 10px);
+    top: auto;
+    left: auto;
+    width: min(380px, calc(100vw - 32px));
+  }
+}
+
+/* ---- the work sheet was 12,500px tall ----
+   Two changes, no photographs lost. The scope index goes three across instead of
+   two, and each project record puts its label BESIDE its photographs rather than
+   stacked above them, which removes a heading block of vertical space per record
+   across twenty-one records. */
+@media (min-width: 900px) {
+  .scopesheet .glazing--two { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .record {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 30px);
+    align-items: start;
+  }
+  .record-head { padding-top: .1em; }
+}
+@media (min-width: 1200px) {
+  .scopesheet .glazing--two { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.record + .record { margin-top: clamp(18px, 2.4vw, 30px); }

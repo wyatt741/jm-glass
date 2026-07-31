@@ -255,9 +255,15 @@ def titleblock(here):
       <ul class="jump-list">{links}</ul>
     </nav>
     <div class="tblock-acts">
-      {askwidget()}
       <button class="daylight" type="button" data-theme-toggle aria-pressed="false">
-        <span class="daylight-txt" data-daylight-label>Dark</span>
+        <svg class="dl-icon dl-day" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"></path>
+        </svg>
+        <svg class="dl-icon dl-night" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"></path>
+        </svg>
+        <span class="dl-say" data-daylight-label>Dark</span>
       </button>
     </div>
   </div>
@@ -279,10 +285,11 @@ def sheetfoot():
     </div>
     <div class="sf-data">
       <p class="sf-name">License</p>
-      <p class="sf-line">AZ ROC 302375</p>
-      <p class="sf-line">Specialty Dual CR-65, Glazing</p>
-      <p class="sf-line">Active, first issued 2015-11-09</p>
-      <p class="sf-line">Bonded, no claim ever paid</p>
+      <p class="sf-line">AZ ROC 302375, Specialty Dual CR-65</p>
+      <p class="sf-line">Active through 2027-11-30, first issued 2015-11-09</p>
+      <p class="sf-line">Bond 27806, no claim ever paid</p>
+      <p class="sf-line">No ROC or BBB complaints on file</p>
+      <p class="sf-line"><a href="https://roc.az.gov/" target="_blank" rel="noopener">Check it at roc.az.gov</a></p>
     </div>
     <nav class="sf-jump" aria-label="Sheets">
       <p class="sf-name">Sheets</p>
@@ -345,11 +352,6 @@ def home():
         f'<p class="scope-note">{note}</p></li>'
         for name, _, note in SCOPES)
 
-    record_rows = "".join(
-        f'<div class="stamp-row"><dt class="stamp-key">{k}</dt>'
-        f'<dd class="stamp-val">{v}<span class="stamp-note">{note}</span></dd></div>'
-        for k, v, note in RECORD)
-
     # the work, led by photographs at size rather than a tidy grid of thumbnails
     lead = BY_FILE["cfc-1.jpg"]
     rest = [BY_FILE[f] for f in ("johnny-was.jpg", "esplanade-1.jpg",
@@ -383,15 +385,8 @@ def home():
   </section>
 
   <section class="creed">
-    <p class="creed-p">Shell storefront through tenant improvement interiors,
-      across the Valley.</p>
-  </section>
-
-  <section class="stamp" aria-labelledby="stamp-h">
-    <h2 class="stamp-h" id="stamp-h">The record, checkable</h2>
-    <p class="stamp-lede">Public at
-      <a href="https://roc.az.gov/" target="_blank" rel="noopener">roc.az.gov</a>.</p>
-    <dl class="stamp-grid" data-set-in>{record_rows}</dl>
+    <p class="creed-p">Hundreds of commercial projects across the Valley, from shell
+      storefront to tenant improvement interiors.</p>
   </section>
 
   <section class="shots" aria-labelledby="shots-h">
@@ -441,7 +436,8 @@ def home():
     <p><a class="act act--big" href="contact.html">Send a bid invitation</a></p>
   </section>
 </main>
-{sheetfoot()}'''
+{sheetfoot()}
+{askwidget()}'''
     return SITE.page(
         f"{SITE.biz} | Commercial Glazing Phoenix",
         f"Commercial glazing and tenant improvement in Phoenix. Storefront, curtain "
@@ -494,8 +490,8 @@ def on_the_job():
 <main id="main">
   <section class="pagehead">
     <h1 class="pagehead-h">On the job</h1>
-    <p class="pagehead-sub">The scopes we work in, and a selection of the jobs
-      behind them.</p>
+    <p class="pagehead-sub">The scopes we work in, and a selection of the jobs behind
+      them. We have run hundreds; these are the ones we have photographs of.</p>
   </section>
 
   <section class="scopesheet" aria-labelledby="scopes-h">
@@ -528,7 +524,8 @@ def on_the_job():
     <p><a class="act" href="contact.html">Send a bid invitation</a></p>
   </section>
 </main>
-{sheetfoot()}'''
+{sheetfoot()}
+{askwidget()}'''
     return SITE.page(
         f"On the Job | {SITE.biz}",
         "The commercial glazing scopes J&M Glass works in, from storefront and "
@@ -606,7 +603,8 @@ def contact():
     </form>
   </section>
 </main>
-{sheetfoot()}'''
+{sheetfoot()}
+{askwidget()}'''
     return SITE.page(
         f"Bid Invitations | {SITE.biz}",
         "Send a commercial glazing bid invitation to J&M Glass in Phoenix. What to "

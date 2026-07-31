@@ -257,11 +257,11 @@ def titleblock(here):
     <div class="tblock-acts">
       <button class="daylight" type="button" data-theme-toggle aria-pressed="false">
         <svg class="dl-icon dl-day" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <circle cx="12" cy="12" r="4.2"></circle>
-          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"></path>
+          <circle cx="12" cy="12" r="4.6"></circle>
+          <path d="M12.00 4.60L12.00 1.80M17.23 6.77L19.21 4.79M19.40 12.00L22.20 12.00M17.23 17.23L19.21 19.21M12.00 19.40L12.00 22.20M6.77 17.23L4.79 19.21M4.60 12.00L1.80 12.00M6.77 6.77L4.79 4.79"></path>
         </svg>
         <svg class="dl-icon dl-night" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"></path>
+          <path d="M20.6 14.1A8.6 8.6 0 0 1 9.9 3.4 8.6 8.6 0 1 0 20.6 14.1Z"></path>
         </svg>
         <span class="dl-say" data-daylight-label>Dark</span>
       </button>

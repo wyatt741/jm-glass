@@ -315,9 +315,14 @@ h1, h2, h3 { text-transform: none; }
 }
 
 .daylight {
+  /* square: it holds a glyph now, not the word "Light" */
+  width: 44px;
+  height: 44px;
   min-height: 44px;
-  min-width: 60px;
-  padding: 8px 12px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
   background: transparent;
@@ -353,7 +358,7 @@ h1, h2, h3 { text-transform: none; }
   .tblock-data { font-size: 12px; }
   .tb-field--call .tb-key { display: none; }   /* the number reads as a number */
   .tblock-acts { gap: 6px; }
-  .ask-open, .daylight { padding-inline: 10px; font-size: 13px; }
+  .ask-open { padding-inline: 10px; font-size: 13px; }
 }
 
 /* tablets have room for the mark and the data strip on one line, so they get two
@@ -1226,16 +1231,16 @@ h1, h2, h3 { text-transform: none; }
    five prior sites), hence dl-day / dl-night. The word stays in the DOM as the
    accessible name, visually hidden, so the control is still announced properly. */
 .dl-icon {
-  width: 20px;
-  height: 20px;
-  fill: none;
+  width: 22px;
+  height: 22px;
+  fill: none;                /* ALL stroke, both glyphs: a filled disc beside thin
+                                stroked rays read as two different icons */
   stroke: currentColor;
-  stroke-width: 1.9;
+  stroke-width: 2.2;         /* 2.0 goes spindly once a 24 viewBox renders at 22px */
   stroke-linecap: round;
+  stroke-linejoin: round;
   display: block;
 }
-.dl-icon.dl-day circle { fill: currentColor; stroke: none; }
-.dl-icon.dl-night { fill: currentColor; stroke: none; }
 /* light theme shows the moon (what a click switches TO), dark shows the sun */
 .dl-day { display: none; }
 :root[data-theme="dark"] .dl-day { display: block; }
@@ -1254,8 +1259,11 @@ h1, h2, h3 { text-transform: none; }
 }
 .daylight {
   width: 44px;
-  padding-inline: 0;
-  justify-content: center;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  justify-content: center;   /* square, so the glyph is centred rather than adrift
+                                in a button still sized for a word */
 }
 
 /* ---- the assistant, bottom right ----

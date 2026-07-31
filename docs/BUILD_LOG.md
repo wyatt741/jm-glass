@@ -542,6 +542,30 @@ lines, and a gradient scrim is a different vocabulary.
 
 `gate.py` green, `visual_qa.py` **70/70**, overlap **0** against all five, 146 classes.
 
+## The marks move up under the hero (2026-07-31)
+
+Wyatt: "who we glaze for should be below the header." Read as the hero, not the masthead:
+a light logo strip wedged between the sticky masthead and the full-bleed photograph would
+put 170px of chrome above a hero whose whole premise is that the photograph is the page.
+So the section moved from seventh on the sheet to second, directly under the stage.
+
+Moving it forced two changes it did not need at the bottom of the page:
+
+- **The heading stopped shouting.** `.gcs-h` was swept up in the display-scale rule at
+  `clamp(1.75rem, 4vw, 3rem)`. Two hundred pixels under the hero claim that out-ranked it,
+  and it outweighed "The work" further down, which is the section that has earned the size.
+  It is now the same small tracked uppercase as the hero's own eyebrow, so the two read as
+  one voice. It stays an `h2` and stays the `aria-labelledby` target.
+- **The strip attached to the hero.** A full section's block padding above it read as a new
+  chapter; tightened so it reads as the photograph's caption.
+
+Overflow 0 and no clipped marks re-measured at 1440 and 390 after the move.
+`gate.py` green, `visual_qa.py` **70/70**, overlap **0**, 146 classes.
+
+Not touched, and visible in the desktop capture: `.creed` is an inset ink box whose 24ch
+paragraph leaves the right two-thirds of the box empty. That predates this move and is
+unchanged by it, so it was left alone rather than fixed silently.
+
 ### Wyatt's §12.8 verdict — still open, and now gates the LIVE ship only
 
 The row below is the one thing in this run I must not fill in myself. Replace `PENDING`

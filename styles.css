@@ -1317,10 +1317,26 @@ h1, h2, h3 { text-transform: none; }
 .gcs {
   max-width: none;
   padding-inline: 0;
+  /* the strip sits directly under the hero, so it is tight to it: a full section's
+     worth of air above would read as a separate chapter rather than as the
+     photograph's caption */
+  padding-block: clamp(26px, 4vh, 46px) clamp(30px, 5vh, 56px);
 }
+/* at this position the heading is a label, not a chapter title. Set at display
+   size it out-ranked the hero claim two hundred pixels above it and outweighed
+   "The work" further down, which is the section that actually deserves the size.
+   Same treatment as the hero's own eyebrow, so the two read as one voice. */
 .gcs-h {
   width: min(var(--measure), 100% - var(--gut) * 2);
   margin-inline: auto;
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1.15em;
 }
 
 /* ---- the GC marks glide, right to left ----

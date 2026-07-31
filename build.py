@@ -391,6 +391,13 @@ def home():
     </div>
   </section>
 
+  <section class="gcs" aria-labelledby="gcs-h">
+    <h2 class="gcs-h" id="gcs-h">Who we glaze for</h2>
+    <div class="gcband">
+      <ul class="gcband-track">{marks}</ul>
+    </div>
+  </section>
+
   <section class="creed">
     <p class="creed-p">Hundreds of commercial projects across the Valley, from shell
       storefront to tenant improvement interiors.</p>
@@ -409,13 +416,6 @@ def home():
     <h2 class="scope-h" id="scope-h">What we work in</h2>
     <ul class="scope-list" data-set-in>{scope_rows}</ul>
     <p class="scope-more"><a class="act act--quiet" href="on-the-job.html">Each scope, with the work behind it</a></p>
-  </section>
-
-  <section class="gcs" aria-labelledby="gcs-h">
-    <h2 class="gcs-h" id="gcs-h">Who we glaze for</h2>
-    <div class="gcband">
-      <ul class="gcband-track">{marks}</ul>
-    </div>
   </section>
 
   <section class="crew" aria-labelledby="crew-h">
